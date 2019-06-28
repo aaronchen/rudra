@@ -6,7 +6,7 @@ Rudra: A Selenium IDE alternative using Ruby binding of selenium-webdriver.
 
 `gem install rudra`
 
-# Test Case
+# How To Use
 
 ```ruby
 require 'rudra'
@@ -17,7 +17,7 @@ rudra.mkdir('./screenshots')
 rudra.open('https://www.google.com')
 rudra.send_keys('name=q', 'webdriver', :enter)
 rudra.wait_for_title('webdriver')
-udra.save_screenshot('./screenshots/sample.png')
+rudra.save_screenshot('./screenshots/sample.png')
 ```
 
 # Documentation
