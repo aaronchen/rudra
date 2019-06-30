@@ -9,10 +9,11 @@ Webdrivers.install_dir = './webdrivers/'
 # Selenium IDE-like WebDriver based upon Ruby binding
 # @author Aaron Chen
 # @attr_reader [Symbol] browser The chosen browser
-# @attr_reader [WebDriver::Driver] driver The driver instance
+# @attr_reader [Selenium::WebDriver::Driver] driver The driver instance
 #   of the chosen browser
 # @attr_reader [String] locale The browser locale
 # @attr_reader [Integer] timeout The driver timeout
+# @attr_writer [Boolean] verbose Verbose mode
 class Rudra
   # Supported Browsers
   BROWSERS = %i[chrome firefox safari].freeze
@@ -24,6 +25,7 @@ class Rudra
   ].freeze
 
   attr_reader :browser, :driver, :locale, :timeout
+  attr_writer :verbose
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -38,14 +40,21 @@ class Rudra
     initialize_driver
 
     self.timeout = options.fetch(:timeout, 30)
+    self.verbose = options.fetch(:verbose, true)
   end
 
   #
   # Driver Functions
   #
 
+  # Initialize ActionBuilder
+  # @return [Selenium::WebDriver::ActionBuilder] ActionBuilder
+  def action
+    driver.action
+  end
+
   # Get the active element
-  # @return [WebDriver::Element] the active element
+  # @return [Selenium::WebDriver::Element] the active element
   def active_element
     driver.switch_to.active_element
   end
@@ -78,16 +87,19 @@ class Rudra
 
   # Move back a single entry in the browser's history
   def back
+    log('- back') if @verbose
     driver.navigate.back
   end
 
   # Open a blank page
   def blank
+    log('- blank') if @verbose
     open('about:blank')
   end
 
   # Close the current window, or the browser if no windows are left
   def close
+    log('- close') if @verbose
     driver.close
   end
 
@@ -117,19 +129,22 @@ class Rudra
 
   # Execute the given JavaScript
   # @param [String] script JavaScript source to execute
-  # @param [WebDriver::Element, Integer, Float, Boolean, NilClass, String,
-  #   Array] args arguments will be available in the given script in the
-  #   'arguments' pseudo-array
-  # @return [WebDriver::Element, Integer, Float, Boolean, NilClass, String,
-  #   Array] the value returned from the script
+  # @param [Selenium::WebDriver::Element, Integer, Float, Boolean, NilClass,
+  #   String, Array] args arguments will be available in the given script
+  #   in the 'arguments' pseudo-array
+  # @return [Selenium::WebDriver::Element, Integer, Float, Boolean, NilClass,
+  #   String, Array] the value returned from the script
   def execute_script(script, *args)
     driver.execute_script(script, *args)
   end
 
   # Find the first element matching the given locator
-  # @param [String] locator the locator to identify the element
-  # @return [WebDriver::Element] the element found
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @return [Selenium::WebDriver::Element] the element found
   def find_element(locator)
+    return locator if locator.is_a?(Selenium::WebDriver::Element)
+
     element = nil
     how, what = parse_locator(locator)
 
@@ -149,7 +164,7 @@ class Rudra
 
   # Find all elements matching the given locator
   # @param [String] locator the locator to identify the elements
-  # @return [Array<WebDriver::Element>] the elements found
+  # @return [Array<Selenium::WebDriver::Element>] the elements found
   def find_elements(locator)
     how, what = parse_locator(locator)
     driver.find_elements(how, what) ||
@@ -158,26 +173,38 @@ class Rudra
 
   # Move forward a single entry in the browser's history
   def forward
+    log('- forward') if @verbose
     driver.navigate.forward
   end
 
   # Make the current window full screen
   def full_screen
+    log('- full_screen') if @verbose
     driver.manage.window.full_screen
   end
 
   # Quit the browser
   def quit
+    log('- quit') if @verbose
     driver.quit
+  end
+
+  # Print message
+  # @param [String] message the message to print
+  def log(message)
+    puts message
   end
 
   # Maximize the current window
   def maximize
+    log('- maximize') if @verbose
     driver.manage.window.maximize
   end
 
   # Maximize the current window to the size of the screen
   def maximize_to_screen
+    log('- maximize_to_screen') if @verbose
+
     size = execute_script(%(
       return { width: window.screen.width, height: window.screen.height };
     ))
@@ -188,6 +215,7 @@ class Rudra
 
   # Minimize the current window
   def minimize
+    log('- minimize') if @verbose
     driver.manage.window.minimize
   end
 
@@ -222,11 +250,19 @@ class Rudra
   # Open the specified URL in the browser
   # @param [String] url the URL of the page to open
   def open(url)
+    log("- open(#{url})") if @verbose
     driver.get(url)
   end
 
-  # Refresh the current page
+  # Get the source of the current page
+  # @return (String) the source of the current page
+  def page_source
+    driver.page_source
+  end
+
+  # Refresh the current pagef
   def refresh
+    log('- refresh') if @verbose
     driver.navigate.refresh
   end
 
@@ -240,6 +276,7 @@ class Rudra
   # Save a PNG screenshot to the given path
   # @param [String] png_path the path of PNG screenshot
   def save_screenshot(png_path)
+    log("- save_screenshot(#{png_path})") if @verbose
     driver.save_screenshot(
       png_path.end_with?('.png') ? png_path : "#{png_path}.png"
     )
@@ -298,7 +335,8 @@ class Rudra
   end
 
   # Wait until the element, identified by locator, is visible
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def wait_for_visible(locator)
     wait_for { find_element(locator).displayed? }
   end
@@ -318,6 +356,7 @@ class Rudra
   # Zoom the current page
   # @param [Float] scale the scale of zoom
   def zoom(scale)
+    log("- zoom(#{scale})") if @verbose
     execute_script(%(document.body.style.zoom = arguments[0];), scale)
   end
 
@@ -327,7 +366,8 @@ class Rudra
 
   # Get the value of the given attribute of the element,
   # identified by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] attribute the name of the attribute
   # @return [String, nil] attribute value
   def attribute(locator, attribute)
@@ -335,7 +375,8 @@ class Rudra
   end
 
   # If the element, identified by locator, has the given attribute
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] attribute the name of the attribute
   # @return [Boolean] the result of the existence of the given attribute
   def attribute?(locator, attribute)
@@ -345,8 +386,10 @@ class Rudra
   end
 
   # Blur the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def blur(locator)
+    log("- blur(#{locator})") if @verbose && locator.is_a?(String)
     execute_script(
       'var element = arguments[0]; element.blur();',
       find_element(locator)
@@ -354,34 +397,94 @@ class Rudra
   end
 
   # Clear the input of the given element, identified by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def clear(locator)
+    log("- clear(#{locator})") if @verbose && locator.is_a?(String)
     find_element(locator).clear
   end
 
   # Click the given element, identified by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def click(locator)
+    log("- click(#{locator})") if @verbose && locator.is_a?(String)
     find_element(locator).click
   end
 
+  # Click the given element, identified by locator, with an offset
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Hash] offset the offset coordinates
+  # @option offset [Integer] :x (0) offset on x coordinate
+  # @option offset [Integer] :y (0) offset on y coordinate
+  def click_at(locator, offset = {})
+    log("- click_at(#{locator})") if @verbose && locator.is_a?(String)
+
+    x = offset.fetch(:x, 0)
+    y = offset.fetch(:y, 0)
+
+    element = find_element(locator)
+
+    action
+      .move_to(element, x, y)
+      .click
+      .perform
+  end
+
   # If the given element, identified by locator, is displayed
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def displayed?(locator)
     find_element(locator).displayed?
   end
 
+  # Double-click the given element, identified by locator, with an offset
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Hash] offset the offset coordinates
+  # @option offset [Integer] :x (0) offset on x coordinate
+  # @option offset [Integer] :y (0) offset on y coordinate
+  def double_click(locator, offset = {})
+    log("- double_click(#{locator})") if @verbose && locator.is_a?(String)
+
+    x = offset.fetch(:x, 0)
+    y = offset.fetch(:y, 0)
+
+    element = find_element(locator)
+
+    action
+      .move_to(element, x, y)
+      .double_click
+      .perform
+  end
+
+  # Drag and drop
+  # @param [String] from_locator the locator to emulate button down at
+  # @param [String] to_locator the locator to to move to and release
+  #   the mouse at
+  def drag_and_drop(from_locator, to_locator)
+    el1 = find_element(from_locator)
+    el2 = find_element(to_locator)
+
+    action.drag_and_drop(el1, el2).perform
+  end
+
   # If the given element, identified by locator, is enabled
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def enabled?(locator)
     find_element(locator).enabled?
   end
 
   # Focus the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def focus(locator)
+    log("- focus(#{locator})") if @verbose && locator.is_a?(String)
+
     execute_script(
       'var element = arguments[0]; element.focus();',
       find_element(locator)
@@ -389,45 +492,75 @@ class Rudra
   end
 
   # Hide the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def hide(locator)
+    log("- hide(#{locator})") if @verbose && locator.is_a?(String)
+
     execute_script(%(
       arguments[0].style.display = 'none';
     ), find_element(locator))
   end
 
   # Hightlight the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def highlight(locator)
+    log("- highlight(#{locator})") if @verbose && locator.is_a?(String)
+
     execute_script(%(
-      arguments[0].style.backgroundColor = '#FFFF33';
+      arguments[0].style.backgroundColor = '#ff3';
     ), find_element(locator))
   end
 
   # Click the given element, identified by locator, via Javascript
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def js_click(locator)
+    log("- js_click(#{locator})") if @verbose && locator.is_a?(String)
     execute_script('arguments[0].click();', find_element(locator))
   end
 
   # Get the location of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
-  # @return [WebDriver::Point] the point of the given element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @return [Selenium::WebDriver::Point] the point of the given element
   def location(locator)
     find_element(locator).location
   end
 
+  # Move to the given element, identified by locator, with an offset
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Hash] offset the offset coordinates
+  # @option offset [Integer] :x (0) offset on x coordinate
+  # @option offset [Integer] :y (0) offset on y coordinate
+  def move_to(locator, offset = {})
+    log("- move_to(#{locator})") if @verbose && locator.is_a?(String)
+
+    x = offset.fetch(:x, 0)
+    y = offset.fetch(:y, 0)
+
+    element = find_element(locator)
+
+    action
+      .move_to(element, x, y)
+      .perform
+  end
+
   # Get the dimensions and coordinates of the given element,
   # identfied by locator
-  # @param [String] locator the locator to identify the element
-  # @return [WebDriver::Rectangle] the retangle of the given element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @return [Selenium::WebDriver::Rectangle] the retangle of the given element
   def rect(locator)
     find_element(locator).rect
   end
 
   # Remove the given attribute from the given element,
   # identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] attribute the name of the attribute
   def remove_attribute(locator, attribute)
     execute_script(%(
@@ -439,11 +572,30 @@ class Rudra
     ), find_element(locator), attribute)
   end
 
+  # Right-click the given element, identified by locator, with an offset
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Hash] offset the offset coordinates
+  # @option offset [Integer] :x (0) offset on x coordinate
+  # @option offset [Integer] :y (0) offset on y coordinate
+  def right_click(locator, offset = {})
+    log("- right_click(#{locator})") if @verbose && locator.is_a?(String)
+
+    x = offset.fetch(:x, 0)
+    y = offset.fetch(:y, 0)
+
+    element = find_element(locator)
+    action.move_to(element, x, y).context_click.perform
+  end
+
   # Scroll the given element, identfied by locator, into view
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [Boolean] align_to true if aligned on top or
   #   false if aligned at the bottom
   def scroll_into_view(locator, align_to = true)
+    log("- scroll_into_view(#{locator})") if @verbose && locator.is_a?(String)
+
     execute_script(
       'arguments[0].scrollIntoView(arguments[1]);',
       find_element(locator),
@@ -452,27 +604,35 @@ class Rudra
   end
 
   # Select the given option, identified by locator
-  # @param [String] option_locator the option locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] option_locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def select(option_locator)
+    if @verbose && option_locator.is_a?(String)
+      log("- select(#{option_locator})")
+    end
     find_element(option_locator).click
   end
 
   # If the given element, identified by locator, is selected
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def selected?(locator)
     find_element(locator).selected?
   end
 
   # Send keystrokes to the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String, Symbol, Array] args keystrokes to send
   def send_keys(locator, *args)
+    log("- send_keys(#{locator})") if @verbose && locator.is_a?(String)
     find_element(locator).send_keys(*args)
   end
 
   # Set the attribute's value of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] attribute the name of the attribute
   # @param [String] value the value of the attribute
   def set_attribute(locator, attribute, value)
@@ -485,42 +645,50 @@ class Rudra
   end
 
   # Show the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def show(locator)
+    log("- show(#{locator})") if @verbose && locator.is_a?(String)
     execute_script(%(
       arguments[0].style.display = '';
     ), find_element(locator))
   end
 
   # Get the size of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
-  # @return [WebDriver::Dimension]
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @return [Selenium::WebDriver::Dimension]
   def size(locator)
     find_element(locator).size
   end
 
   # Submit the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   def submit(locator)
+    log("- submit(#{locator})") if @verbose && locator.is_a?(String)
     find_element(locator).submit
   end
 
   # Get the tag name of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @return [String] the tag name of the given element
   def tag_name(locator)
     find_element(locator).tag_name
   end
 
   # Get the text content of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @return [String] the text content of the given element
   def text(locator)
     find_element(locator).text
   end
 
   # Trigger the given event on the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] event the event name
   def trigger(locator, event)
     execute_script(%(
@@ -548,9 +716,11 @@ class Rudra
   end
 
   # Draw an arrow from an element to an element2
-  # @param [String] from_locator the locator where the arrow starts
-  # @param [String] to_locator the locator where the arrow ends
-  # @return [WebDriver::Element] the arrow element
+  # @param [String, Selenium::WebDriver::Element] from_locator the locator
+  #   or Selenium::WebDriver::Element where the arrow starts
+  # @param [String, Selenium::WebDriver::Element] to_locator the locator
+  #   or Selenium::WebDriver::Element where the arrow ends
+  # @return [Selenium::WebDriver::Element] the arrow element
   def draw_arrow(from_locator, to_locator)
     id = random_id
 
@@ -586,7 +756,7 @@ class Rudra
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
       ctx.lineWidth  = 3;
-      ctx.strokeStyle = '#ff0000';
+      ctx.strokeStyle = '#f00';
       ctx.stroke();
       // arrow
       ctx.beginPath();
@@ -605,7 +775,7 @@ class Rudra
         to.y - headlen * Math.sin(angle - Math.PI/7)
       );
       ctx.lineWidth  = 3;
-      ctx.strokeStyle = '#ff0000';
+      ctx.strokeStyle = '#f00';
       ctx.stroke();
       return;
     ), find_element(from_locator), find_element(to_locator))
@@ -614,9 +784,10 @@ class Rudra
   end
 
   # Draw color fill on the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] color CSS style of backgroundColor
-  # @return [WebDriver::Element] the color fill element
+  # @return [Selenium::WebDriver::Element] the color fill element
   def draw_color_fill(locator, color = 'rgba(255,0,0,0.8)')
     rectangle = rect(locator)
     id = random_id
@@ -643,7 +814,8 @@ class Rudra
   end
 
   # Draw tooltip of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [Hash] options the options to create a tooltip
   # @option options [String] :attribute (title) attribute to draw
   #   the flyover with
@@ -652,7 +824,7 @@ class Rudra
   # @option options [Boolean] :from_last_pos (false) if to draw
   #   from last position
   # @option options [Boolean] :draw_symbol (false) if to draw symbol
-  # @return [WebDriver::Element] the tooltip element
+  # @return [Selenium::WebDriver::Element] the tooltip element
   def draw_flyover(locator, options = {})
     attribute_name = options.fetch(:attribute, 'title')
     offset_x = options.fetch(:offset_x, 5)
@@ -722,13 +894,14 @@ class Rudra
   end
 
   # Draw redmark around the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [Hash] padding the padding of the given redmark
   # @option padding [Integer] :top (5) top padding
   # @option padding [Integer] :right (5) right padding
   # @option padding [Integer] :bottom (5) bottom padding
   # @option padding [Integer] :left (5) left padding
-  # @return [WebDriver::Element] the redmark element
+  # @return [Selenium::WebDriver::Element] the redmark element
   def draw_redmark(locator, padding = {})
     top = padding.fetch(:top, 5)
     right = padding.fetch(:right, 5)
@@ -759,11 +932,12 @@ class Rudra
   end
 
   # Draw dropdown menu on the given SELECT element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [Hash] options the options to create the dropdown menu
   # @option options [Integer] :offset_x (0) offset on x coordinate
   # @option options [Integer] :offset_y (0) offset on y coordinate
-  # @return [WebDriver::Element] the dropdown menu element
+  # @return [Selenium::WebDriver::Element] the dropdown menu element
   def draw_select(locator, options = {})
     offset_x = options.fetch(:offset_x, 0)
     offset_y = options.fetch(:offset_y, 0)
@@ -815,14 +989,15 @@ class Rudra
   end
 
   # Draw text on top of the given element, identfied by locator
-  # @param [String] locator the locator to identify the element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
   # @param [String] text the text to draw
   # @param [Hash] options the options to create the text
   # @option options [String] :color ('#f00') the color of the text
   # @option options [Integer] :font_size (13) the font size of the text
   # @option options [Integer] :top (2) CSS style of top
   # @option options [Integer] :right (20) CSS style of right
-  # @return [WebDriver::Element] the text element
+  # @return [Selenium::WebDriver::Element] the text element
   def draw_text(locator, text, options = {})
     color = options.fetch(:color, '#f00')
     font_size = options.fetch(:font_size, 13)

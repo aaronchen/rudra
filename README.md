@@ -20,6 +20,24 @@ rudra.wait_for_title('webdriver')
 rudra.save_screenshot('./screenshots/sample.png')
 ```
 
+# Supported **_locator_**
+
+**_Format: 'how=what'_**
+
+- `css=.btn`
+- `class=btn-primary`
+- `id=frame1`
+- `name=j_username`
+- `xpath=//span/a`
+- etc
+
+If **_how_** is not specified, locator starting with `//` or `(` will be parsed as **xpath**, while `.`, `[` and `#` are treated as **css**.
+
+**css** pseudo selector support => `:eq()`
+
 # Documentation
 
-[https://aaronchen.github.io/rudra/Rudra.html](https://aaronchen.github.io/rudra/Rudra.html)
+- [Rudra Documentation](https://aaronchen.github.io/rudra/Rudra.html)
+- [Ruby selenium-webdriver 3.142.3](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium)
+- [Selenium::WebDriver::ActionBuilder](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium/WebDriver/ActionBuilder)
+- [Selenium::WebDriver::Keys](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium/WebDriver/Keys)
