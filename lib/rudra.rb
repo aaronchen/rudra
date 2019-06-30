@@ -472,6 +472,19 @@ class Rudra
     action.drag_and_drop(el1, el2).perform
   end
 
+  # Drag and drop to an offset
+  # @param [String] source the locator to emulate button down at
+  # @param [Hash] offset the offset coordinates
+  # @option offset [Integer] :x (0) offset on x coordinate
+  # @option offset [Integer] :y (0) offset on y coordinate
+  def drag_and_drop_by(source, offset = {})
+    element = find_element(source)
+    x = offset.fetch(:x, 0)
+    y = offset.fetch(:y, 0)
+
+    action.drag_and_drop_by(element, x, y).perform
+  end
+
   # If the given element, identified by locator, is enabled
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
@@ -528,6 +541,13 @@ class Rudra
   # @return [Selenium::WebDriver::Point] the point of the given element
   def location(locator)
     find_element(locator).location
+  end
+
+  # Moves the mouse from its current position (or 0,0) by the given offset
+  # @param [Integer] right_by horizontal offset
+  # @param [Integer] down_by vertical offset
+  def move_by(right_by = 0, down_by = 0)
+    action.move_by(right_by, down_by).perform
   end
 
   # Move to the given element, identified by locator, with an offset
