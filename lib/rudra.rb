@@ -31,12 +31,12 @@ class Rudra
   # @param [Hash] options the options to initialize Rudra
   # @option options [Symbol] :browser (:chrome) the supported
   #   browsers: :chrome, :firefox, :safari
-  # @option options [String] :locale ('en') the browser locale
+  # @option options [Symbol] :locale (:en) the browser locale
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (true) verbose mode
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
-    self.locale = options.fetch(:locale, 'en')
+    self.locale = options.fetch(:locale, :en)
 
     initialize_driver
 
@@ -527,6 +527,12 @@ class Rudra
     ), find_element(locator))
   end
 
+  # Set implicit_wait timeout
+  # @param [Integer] seconds timeout for implicit_wait
+  def implicit_wait(seconds)
+    driver.manage.timeouts.implicit_wait = seconds
+  end
+
   # Click the given element, identified by locator, via Javascript
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
@@ -569,6 +575,12 @@ class Rudra
       .perform
   end
 
+  # Set page_load timeout
+  # @param [Integer] seconds timeout for page_load
+  def page_load(seconds)
+    driver.manage.timeouts.page_load = seconds
+  end
+
   # Get the dimensions and coordinates of the given element,
   # identfied by locator
   # @param [String, Selenium::WebDriver::Element] locator the locator to
@@ -607,6 +619,12 @@ class Rudra
 
     element = find_element(locator)
     action.move_to(element, x, y).context_click.perform
+  end
+
+  # Set script_timeout timeout
+  # @param [Integer] seconds timeout for script_timeout
+  def script_timeout(seconds)
+    driver.manage.timeouts.script_timeout = seconds
   end
 
   # Scroll the given element, identfied by locator, into view
@@ -1081,16 +1099,16 @@ class Rudra
 
   def locale=(loc)
     @locale = if browser == :firefox
-                loc.sub('_', '-').gsub(/(-[a-zA-Z]{2})$/, &:downcase)
+                loc.to_s.sub('_', '-').gsub(/(-[a-zA-Z]{2})$/, &:downcase)
               else
-                loc.sub('_', '-').gsub(/(-[a-zA-Z]{2})$/, &:upcase)
+                loc.to_s.sub('_', '-').gsub(/(-[a-zA-Z]{2})$/, &:upcase)
               end
   end
 
   def timeout=(seconds)
-    driver.manage.timeouts.implicit_wait = seconds
-    driver.manage.timeouts.page_load = seconds
-    driver.manage.timeouts.script_timeout = seconds
+    implicit_wait(seconds)
+    page_load(seconds)
+    script_timeout(seconds)
     @timeout = seconds
   end
 

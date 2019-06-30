@@ -11,7 +11,7 @@ Rudra: A Selenium IDE alternative using Ruby binding of selenium-webdriver.
 ```ruby
 require 'rudra'
 
-rudra = Rudra.new(browser: :chrome, locale: 'zh_tw')
+rudra = Rudra.new(browser: :chrome, locale: :zh_tw)
 rudra.mkdir('./screenshots')
 
 rudra.open('https://www.google.com')
