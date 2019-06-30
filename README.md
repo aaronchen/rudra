@@ -17,7 +17,12 @@ rudra.mkdir('./screenshots')
 rudra.open('https://www.google.com')
 rudra.send_keys('name=q', 'webdriver', :enter)
 rudra.wait_for_title('webdriver')
+rudra.click('#nav a.fl:eq(1)')
+rudra.scroll_into_view('.fbar')
+rudra.draw_redmark('#fsl')
 rudra.save_screenshot('./screenshots/sample.png')
+rudra.clear_drawings
+rudra.quit
 ```
 
 # Supported **_locator_**

@@ -33,6 +33,7 @@ class Rudra
   #   browsers: :chrome, :firefox, :safari
   # @option options [String] :locale ('en') the browser locale
   # @option options [Integer] :timeout (30) implicit_wait timeout
+  # @option options [Boolean] :verbose (true) verbose mode
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.locale = options.fetch(:locale, 'en')
@@ -691,6 +692,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @param [String] event the event name
   def trigger(locator, event)
+    log("- trigger(#{locator})") if @verbose && locator.is_a?(String)
     execute_script(%(
       var element = arguments[0];
       var eventName = arguments[1];
@@ -705,6 +707,7 @@ class Rudra
 
   # Clear all drawing
   def clear_drawings
+    log('- clear_drawings') if @verbose
     execute_script(%(
       var elements = window.document.body.querySelectorAll('[id*="rudra_"]');
       for (var i = 0; i < elements.length; i++) {
@@ -789,6 +792,8 @@ class Rudra
   # @param [String] color CSS style of backgroundColor
   # @return [Selenium::WebDriver::Element] the color fill element
   def draw_color_fill(locator, color = 'rgba(255,0,0,0.8)')
+    log("- draw_color_fill(#{locator})") if @verbose && locator.is_a?(String)
+
     rectangle = rect(locator)
     id = random_id
 
@@ -826,6 +831,8 @@ class Rudra
   # @option options [Boolean] :draw_symbol (false) if to draw symbol
   # @return [Selenium::WebDriver::Element] the tooltip element
   def draw_flyover(locator, options = {})
+    log("- draw_flyover(#{locator})") if @verbose && locator.is_a?(String)
+
     attribute_name = options.fetch(:attribute, 'title')
     offset_x = options.fetch(:offset_x, 5)
     offset_y = options.fetch(:offset_y, 15)
@@ -903,6 +910,8 @@ class Rudra
   # @option padding [Integer] :left (5) left padding
   # @return [Selenium::WebDriver::Element] the redmark element
   def draw_redmark(locator, padding = {})
+    log("- draw_redmark(#{locator})") if @verbose && locator.is_a?(String)
+
     top = padding.fetch(:top, 5)
     right = padding.fetch(:right, 5)
     bottom = padding.fetch(:bottom, 5)
@@ -939,6 +948,8 @@ class Rudra
   # @option options [Integer] :offset_y (0) offset on y coordinate
   # @return [Selenium::WebDriver::Element] the dropdown menu element
   def draw_select(locator, options = {})
+    log("- draw_select(#{locator})") if @verbose && locator.is_a?(String)
+
     offset_x = options.fetch(:offset_x, 0)
     offset_y = options.fetch(:offset_y, 0)
 
@@ -999,6 +1010,8 @@ class Rudra
   # @option options [Integer] :right (20) CSS style of right
   # @return [Selenium::WebDriver::Element] the text element
   def draw_text(locator, text, options = {})
+    log("- draw_text(#{locator})") if @verbose && locator.is_a?(String)
+
     color = options.fetch(:color, '#f00')
     font_size = options.fetch(:font_size, 13)
     top = options.fetch(:top, 2)
