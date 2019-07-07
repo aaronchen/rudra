@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rudra'
-  spec.version       = '1.0.4'
-  spec.date          = '2019-06-30'
+  spec.version       = '1.0.5'
+  spec.date          = '2019-07-07'
   spec.author        = 'Aaron Chen'
   spec.email         = 'aaron@611b.com'
 
@@ -13,5 +13,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'yard', '~> 0.9.20'
   spec.add_dependency 'selenium-webdriver', '~> 3.142.3'
-  spec.add_dependency 'webdrivers', '~> 4.0.1'
+  spec.add_dependency 'webdrivers', '~> 4.1.0'
 end

@@ -1,9 +1,12 @@
 Metrics/AbcSize:
   Enabled: true
-  Max: 20
+  Max: 22
 Metrics/ClassLength:
   Enabled: true
   Max: 1000
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  Max: 7
 Metrics/MethodLength:
   Enabled: true
   Max: 65
