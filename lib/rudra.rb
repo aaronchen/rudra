@@ -2,7 +2,6 @@ require 'selenium-webdriver'
 require 'webdrivers/chromedriver'
 require 'webdrivers/geckodriver'
 
-Webdrivers.install_dir = './webdrivers/'
 # Selenium::WebDriver::Chrome::Service.driver_path = './webdrivers/chromedriver'
 # Selenium::WebDriver::Firefox::Service.driver_path = './webdrivers/geckodriver'
 
@@ -11,9 +10,10 @@ Webdrivers.install_dir = './webdrivers/'
 # @attr_reader [Symbol] browser The chosen browser
 # @attr_reader [Selenium::WebDriver::Driver] driver The driver instance
 #   of the chosen browser
+# @attr_reader [String] install_dir The install directory of WebDrivers
 # @attr_reader [String] locale The browser locale
 # @attr_reader [Integer] timeout The driver timeout
-# @attr_writer [Boolean] verbose Verbose mode
+# @attr_reader [Boolean] verbose Verbose mode
 class Rudra
   # Supported Browsers
   BROWSERS = %i[chrome firefox safari].freeze
@@ -24,24 +24,37 @@ class Rudra
     name partial_link_text tag_name xpath
   ].freeze
 
-  attr_reader :browser, :driver, :locale, :timeout
-  attr_writer :verbose
+  attr_reader :browser, :driver, :install_dir, :locale,
+              :log_prefix, :timeout, :verbose
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
   # @option options [Symbol] :browser (:chrome) the supported
   #   browsers: :chrome, :firefox, :safari
+  # @option options [String] :install_dir ('./webdrivers/') the install
+  #   directory of WebDrivers
   # @option options [Symbol] :locale (:en) the browser locale
+  # @option options [String] :log_prefix (' - ') log prefix
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (true) verbose mode
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
+    self.install_dir = options.fetch(:install_dir, './webdrivers/')
     self.locale = options.fetch(:locale, :en)
+    self.log_prefix = options.fetch(:log_prefix, ' - ')
+    self.verbose = options.fetch(:verbose, true)
 
     initialize_driver
 
     self.timeout = options.fetch(:timeout, 30)
-    self.verbose = options.fetch(:verbose, true)
+
+    @verbose && (
+        puts %(
+          ============ Rudra ============
+          Browser: #{@browser}, Locale: #{@locale}
+          ============  Log  ============
+        ).lines.map(&:strip).reject(&:empty?).join("\n")
+      )
   end
 
   #
@@ -51,14 +64,14 @@ class Rudra
   # Initialize ActionBuilder
   # @return [Selenium::WebDriver::ActionBuilder] ActionBuilder
   def action
-    log('- action')
+    log
     driver.action
   end
 
   # Get the active element
   # @return [Selenium::WebDriver::Element] the active element
   def active_element
-    log('- active_element')
+    log
     driver.switch_to.active_element
   end
 
@@ -70,43 +83,43 @@ class Rudra
   # @option opts [Boolean] :secure (false) a boolean
   # @option opts [Time, DateTime, Numeric, nil] :expires (nil) expiry date
   def add_cookie(opts = {})
-    log("- add_cookie(#{opts})")
+    log(opts)
     driver.manage.add_cookie(opts)
   end
 
   # Accept an alert
   def alert_accept
-    log('- alert_accept')
+    log
     switch_to_alert.accept
   end
 
   # Dismiss an alert
   def alert_dismiss
-    log('- alert_dismiss')
+    log
     switch_to_alert.dismiss
   end
 
   # Send keys to an alert
   def alert_send_keys(keys)
-    log("- alert_send_keys(#{keys})")
+    log(keys)
     switch_to_alert.send_keys(keys)
   end
 
   # Move back a single entry in the browser's history
   def back
-    log('- back')
+    log
     driver.navigate.back
   end
 
   # Open a blank page
   def blank
-    log('- blank')
+    log
     open('about:blank')
   end
 
   # Close the current window, or the browser if no windows are left
   def close
-    log('- close')
+    log
     driver.close
   end
 
@@ -114,27 +127,27 @@ class Rudra
   # @param [String] name the name of the cookie
   # @return [Hash, nil] the cookie, or nil if it wasn't found
   def cookie_named(name)
-    log("- cookie_named(#{name})")
+    log(name)
     driver.manage.cookie_named(name)
   end
 
   # Get the URL of the current page
   # @return (String) the URL of the current page
   def current_url
-    log('- current_url')
+    log
     driver.current_url
   end
 
   # Delete all cookies
   def delete_all_cookies
-    log('- delete_all_cookies')
+    log
     driver.manage.delete_all_cookies
   end
 
   # Delete the cookie with the given name
   # @param [String] name the name of the cookie
   def delete_cookie(name)
-    log("- delete_cookie(#{name})")
+    log(name)
     driver.manage.delete_cookie(name)
   end
 
@@ -146,7 +159,7 @@ class Rudra
   # @return [Selenium::WebDriver::Element, Integer, Float, Boolean, NilClass,
   #   String, Array] the value returned from the script
   def execute_script(script, *args)
-    log('- execute_script')
+    log
     driver.execute_script(script, *args)
   end
 
@@ -155,7 +168,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Selenium::WebDriver::Element] the element found
   def find_element(locator)
-    log("- find_element(#{locator})")
+    log(locator)
 
     return locator if locator.is_a?(Selenium::WebDriver::Element)
 
@@ -180,7 +193,7 @@ class Rudra
   # @param [String] locator the locator to identify the elements
   # @return [Array<Selenium::WebDriver::Element>] the elements found
   def find_elements(locator)
-    log("- find_elements(#{locator})")
+    log(locator)
 
     how, what = parse_locator(locator)
     driver.find_elements(how, what) ||
@@ -189,31 +202,31 @@ class Rudra
 
   # Move forward a single entry in the browser's history
   def forward
-    log('- forward')
+    log
     driver.navigate.forward
   end
 
   # Make the current window full screen
   def full_screen
-    log('- full_screen')
+    log
     driver.manage.window.full_screen
   end
 
   # Quit the browser
   def quit
-    log('- quit')
+    log
     driver.quit
   end
 
   # Maximize the current window
   def maximize
-    log('- maximize')
+    log
     driver.manage.window.maximize
   end
 
   # Maximize the current window to the size of the screen
   def maximize_to_screen
-    log('- maximize_to_screen')
+    log
 
     size = execute_script(%(
       return { width: window.screen.width, height: window.screen.height };
@@ -225,7 +238,7 @@ class Rudra
 
   # Minimize the current window
   def minimize
-    log('- minimize')
+    log
     driver.manage.window.minimize
   end
 
@@ -233,14 +246,14 @@ class Rudra
   # @param [Integer] point_x the x coordinate
   # @param [Integer] point_y the y coordinate
   def move_window_to(point_x, point_y)
-    log("- move_window_to(#{point_x}, #{point_y})")
+    log(point_x, point_y)
     driver.manage.window.move_to(point_x, point_y)
   end
 
   # Open a new tab
   # @return [String] the id of the new tab obtained from #window_handles
   def new_tab
-    log('- new_tab')
+    log
     execute_script('window.open();')
     window_handles.last
   end
@@ -248,7 +261,7 @@ class Rudra
   # Open a new window
   # @param [String] name the name of the window
   def new_window(name)
-    log("- new_window(#{name})")
+    log(name)
     execute_script(%(
       var w = Math.max(
         document.documentElement.clientWidth, window.innerWidth || 0
@@ -263,20 +276,20 @@ class Rudra
   # Open the specified URL in the browser
   # @param [String] url the URL of the page to open
   def open(url)
-    log("- open(#{url})")
+    log(url)
     driver.get(url)
   end
 
   # Get the source of the current page
   # @return (String) the source of the current page
   def page_source
-    log('- page_source')
+    log
     driver.page_source
   end
 
   # Refresh the current pagef
   def refresh
-    log('- refresh')
+    log
     driver.navigate.refresh
   end
 
@@ -284,14 +297,14 @@ class Rudra
   # @param [Integer] width the width of the window
   # @param [Integer] height the height of the window
   def resize_window_to(width, height)
-    log("- resize_window_to(#{width}, #{height})")
+    log(width, height)
     driver.manage.window.resize_to(width, height)
   end
 
   # Save a PNG screenshot to the given path
   # @param [String] png_path the path of PNG screenshot
   def save_screenshot(png_path)
-    log("- save_screenshot(#{png_path})")
+    log(png_path)
     driver.save_screenshot(
       png_path.end_with?('.png') ? png_path : "#{png_path}.png"
     )
@@ -299,40 +312,40 @@ class Rudra
 
   # Switch to the currently active modal dialog
   def switch_to_alert
-    log('- switch_to_alert')
+    log
     driver.switch_to.alert
   end
 
   # Select either the first frame on the page,
   # or the main document when a page contains iframes
   def switch_to_default_content
-    log('- switch_to_default_content')
+    log
     driver.switch_to.default_content
   end
 
   # Switch to the frame with the given id
   def switch_to_frame(id)
-    log("- switch_to_frame(#{id})")
+    log(id)
     driver.switch_to.frame(id)
   end
 
   # Switch to the parent frame
   def switch_to_parent_frame
-    log('- switch_to_parent_frame')
+    log
     driver.switch_to.parent_frame
   end
 
   # Switch to the given window handle
   # @param [String] id the window handle obtained through #window_handles
   def switch_to_window(id)
-    log("- switch_to_window(#{id})")
+    log(id)
     driver.switch_to.window(id)
   end
 
   # Get the title of the current page
   # @return [String] the title of the current page
   def title
-    log('- title')
+    log
     driver.title
   end
 
@@ -340,21 +353,21 @@ class Rudra
   # @param [Integer] seconds seconds before timed out
   # @return [Object] the result of the block
   def wait_for(seconds = timeout)
-    log("- wait_for(#{seconds})")
+    log(seconds)
     Selenium::WebDriver::Wait.new(timeout: seconds).until { yield }
   end
 
   # Wait until the title of the page including the given string
   # @param [String] string the string to compare
   def wait_for_title(string)
-    log("- wait_for_title(#{string})")
+    log(string)
     wait_for { title.downcase.include?(string.downcase) }
   end
 
   # Wait until the URL of the page including the given url
   # @param [String] url the URL to compare
   def wait_for_url(url)
-    log("- wait_for_url(#{url})")
+    log(url)
     wait_for { current_url.include?(url) }
   end
 
@@ -362,28 +375,28 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def wait_for_visible(locator)
-    log("- wait_for_visible(#{locator})")
+    log(locator)
     wait_for { find_element(locator).displayed? }
   end
 
   # Get the current window handle
   # @return [String] the id of the current window handle
   def window_handle
-    log('- window_handle')
+    log
     driver.window_handle
   end
 
   # Get the window handles of open browser windows
   # @return [Array<String>] the ids of window handles
   def window_handles
-    log('- window_handles')
+    log
     driver.window_handles
   end
 
   # Zoom the current page
   # @param [Float] scale the scale of zoom
   def zoom(scale)
-    log("- zoom(#{scale})")
+    log(scale)
     execute_script(%(document.body.style.zoom = arguments[0];), scale)
   end
 
@@ -398,7 +411,7 @@ class Rudra
   # @param [String] attribute the name of the attribute
   # @return [String, nil] attribute value
   def attribute(locator, attribute)
-    log("- attribute(#{locator}, #{attribute})")
+    log(locator, attribute)
     find_element(locator).property(attribute)
   end
 
@@ -408,7 +421,7 @@ class Rudra
   # @param [String] attribute the name of the attribute
   # @return [Boolean] the result of the existence of the given attribute
   def attribute?(locator, attribute)
-    log("- attribute?(#{locator}, #{attribute})")
+    log(locator, attribute)
     execute_script(%(
       return arguments[0].hasAttribute(arguments[1]);
     ), find_element(locator), attribute)
@@ -418,7 +431,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def blur(locator)
-    log("- blur(#{locator})")
+    log(locator)
     execute_script(
       'var element = arguments[0]; element.blur();',
       find_element(locator)
@@ -429,7 +442,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def clear(locator)
-    log("- clear(#{locator})")
+    log(locator)
     find_element(locator).clear
   end
 
@@ -437,7 +450,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def click(locator)
-    log("- click(#{locator})")
+    log(locator)
     find_element(locator).click
   end
 
@@ -448,7 +461,7 @@ class Rudra
   # @option offset [Integer] :x (0) offset on x coordinate
   # @option offset [Integer] :y (0) offset on y coordinate
   def click_at(locator, offset = {})
-    log("- click_at(#{locator}, #{offset})")
+    log(locator, offset)
 
     x = offset.fetch(:x, 0)
     y = offset.fetch(:y, 0)
@@ -466,7 +479,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def displayed?(locator)
-    log("- displayed?(#{locator})")
+    log(locator)
     find_element(locator).displayed?
   end
 
@@ -477,7 +490,7 @@ class Rudra
   # @option offset [Integer] :x (0) offset on x coordinate
   # @option offset [Integer] :y (0) offset on y coordinate
   def double_click(locator, offset = {})
-    log("- double_click(#{locator}, #{offset})")
+    log(locator, offset)
 
     x = offset.fetch(:x, 0)
     y = offset.fetch(:y, 0)
@@ -495,7 +508,7 @@ class Rudra
   # @param [String] to_locator the locator to to move to and release
   #   the mouse at
   def drag_and_drop(from_locator, to_locator)
-    log("- drag_and_drop(#{from_locator}, #{to_locator})")
+    log(from_locator, to_locator)
     el1 = find_element(from_locator)
     el2 = find_element(to_locator)
 
@@ -508,7 +521,7 @@ class Rudra
   # @option offset [Integer] :x (0) offset on x coordinate
   # @option offset [Integer] :y (0) offset on y coordinate
   def drag_and_drop_by(source, offset = {})
-    log("- drag_and_drop_by(#{source}, #{offset})")
+    log(source, offset)
     element = find_element(source)
     x = offset.fetch(:x, 0)
     y = offset.fetch(:y, 0)
@@ -521,7 +534,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def enabled?(locator)
-    log("- enabled?(#{locator})")
+    log(locator)
     find_element(locator).enabled?
   end
 
@@ -529,7 +542,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def focus(locator)
-    log("- focus(#{locator})")
+    log(locator)
 
     execute_script(
       'var element = arguments[0]; element.focus();',
@@ -541,7 +554,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def hide(locator)
-    log("- hide(#{locator})")
+    log(locator)
 
     execute_script(%(
       arguments[0].style.display = 'none';
@@ -552,7 +565,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def highlight(locator)
-    log("- highlight(#{locator})")
+    log(locator)
 
     execute_script(%(
       arguments[0].style.backgroundColor = '#ff3';
@@ -562,7 +575,7 @@ class Rudra
   # Set implicit_wait timeout
   # @param [Integer] seconds timeout for implicit_wait
   def implicit_wait(seconds)
-    log("- implicit_wait(#{seconds})")
+    log(seconds)
     driver.manage.timeouts.implicit_wait = seconds
   end
 
@@ -570,7 +583,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def js_click(locator)
-    log("- js_click(#{locator})")
+    log(locator)
     execute_script('arguments[0].click();', find_element(locator))
   end
 
@@ -579,7 +592,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Selenium::WebDriver::Point] the point of the given element
   def location(locator)
-    log("- location(#{locator})")
+    log(locator)
     find_element(locator).location
   end
 
@@ -587,7 +600,7 @@ class Rudra
   # @param [Integer] right_by horizontal offset
   # @param [Integer] down_by vertical offset
   def move_by(right_by = 0, down_by = 0)
-    log("- move_by(#{right_by}, #{down_by})")
+    log(right_by, down_by)
     action.move_by(right_by, down_by).perform
   end
 
@@ -598,7 +611,7 @@ class Rudra
   # @option offset [Integer] :x (0) offset on x coordinate
   # @option offset [Integer] :y (0) offset on y coordinate
   def move_to(locator, offset = {})
-    log("- move_to(#{locator}, #{offset})")
+    log(locator, offset)
 
     x = offset.fetch(:x, 0)
     y = offset.fetch(:y, 0)
@@ -613,7 +626,7 @@ class Rudra
   # Set page_load timeout
   # @param [Integer] seconds timeout for page_load
   def page_load(seconds)
-    log("- page_load(#{seconds})")
+    log(seconds)
     driver.manage.timeouts.page_load = seconds
   end
 
@@ -623,7 +636,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Selenium::WebDriver::Rectangle] the retangle of the given element
   def rect(locator)
-    log("- rect(#{locator})")
+    log(locator)
     find_element(locator).rect
   end
 
@@ -633,7 +646,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @param [String] attribute the name of the attribute
   def remove_attribute(locator, attribute)
-    log("- remove_attribute(#{locator}, #{attribute})")
+    log(locator, attribute)
     execute_script(%(
       var element = arguments[0];
       var attributeName = arguments[1];
@@ -650,7 +663,7 @@ class Rudra
   # @option offset [Integer] :x (0) offset on x coordinate
   # @option offset [Integer] :y (0) offset on y coordinate
   def right_click(locator, offset = {})
-    log("- right_click(#{locator}, #{offset})")
+    log(locator, offset)
 
     x = offset.fetch(:x, 0)
     y = offset.fetch(:y, 0)
@@ -662,7 +675,7 @@ class Rudra
   # Set script_timeout timeout
   # @param [Integer] seconds timeout for script_timeout
   def script_timeout(seconds)
-    log("- script_timeout(#{seconds})")
+    log(seconds)
     driver.manage.timeouts.script_timeout = seconds
   end
 
@@ -672,7 +685,7 @@ class Rudra
   # @param [Boolean] align_to true if aligned on top or
   #   false if aligned at the bottom
   def scroll_into_view(locator, align_to = true)
-    log("- scroll_into_view(#{locator}, #{align_to})")
+    log(locator, align_to)
 
     execute_script(
       'arguments[0].scrollIntoView(arguments[1]);',
@@ -685,7 +698,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] option_locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def select(option_locator)
-    log("- select(#{option_locator})")
+    log(option_locator)
     find_element(option_locator).click
   end
 
@@ -694,7 +707,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Boolean]
   def selected?(locator)
-    log("- selected?(#{locator})")
+    log(locator)
     find_element(locator).selected?
   end
 
@@ -703,7 +716,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @param [String, Symbol, Array] args keystrokes to send
   def send_keys(locator, *args)
-    log("- send_keys(#{locator}, #{args})")
+    log(locator, *args)
     find_element(locator).send_keys(*args)
   end
 
@@ -713,7 +726,7 @@ class Rudra
   # @param [String] attribute the name of the attribute
   # @param [String] value the value of the attribute
   def set_attribute(locator, attribute, value)
-    log("- set_attribute(#{locator}, #{attribute}, #{value})")
+    log(locator, attribute, value)
     executeScript(%(
       var element = arguments[0];
       var attribute = arguments[1];
@@ -726,7 +739,7 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def show(locator)
-    log("- show(#{locator})")
+    log(locator)
     execute_script(%(
       arguments[0].style.display = '';
     ), find_element(locator))
@@ -737,7 +750,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [Selenium::WebDriver::Dimension]
   def size(locator)
-    log("- size(#{locator})")
+    log(locator)
     find_element(locator).size
   end
 
@@ -754,7 +767,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [String] the tag name of the given element
   def tag_name(locator)
-    log("- tag_name(#{locator})")
+    log(locator)
     find_element(locator).tag_name
   end
 
@@ -763,7 +776,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @return [String] the text content of the given element
   def text(locator)
-    log("- text(#{locator})")
+    log(locator)
     find_element(locator).text
   end
 
@@ -772,7 +785,7 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   # @param [String] event the event name
   def trigger(locator, event)
-    log("- trigger(#{locator}, #{event})")
+    log(locator, event)
     execute_script(%(
       var element = arguments[0];
       var eventName = arguments[1];
@@ -787,7 +800,7 @@ class Rudra
 
   # Clear all drawing
   def clear_drawings
-    log('- clear_drawings')
+    log
     execute_script(%(
       var elements = window.document.body.querySelectorAll('[id*="rudra_"]');
       for (var i = 0; i < elements.length; i++) {
@@ -805,7 +818,7 @@ class Rudra
   #   or Selenium::WebDriver::Element where the arrow ends
   # @return [Selenium::WebDriver::Element] the arrow element
   def draw_arrow(from_locator, to_locator)
-    log("- draw_arrow(#{from_locator}, #{to_locator})")
+    log(from_locator, to_locator)
 
     id = random_id
 
@@ -874,7 +887,7 @@ class Rudra
   # @param [String] color CSS style of backgroundColor
   # @return [Selenium::WebDriver::Element] the color fill element
   def draw_color_fill(locator, color = 'rgba(255,0,0,0.8)')
-    log("- draw_color_fill(#{locator}, #{color})")
+    log(locator, color)
 
     rectangle = rect(locator)
     id = random_id
@@ -913,7 +926,7 @@ class Rudra
   # @option options [Boolean] :draw_symbol (false) if to draw symbol
   # @return [Selenium::WebDriver::Element] the tooltip element
   def draw_flyover(locator, options = {})
-    log("- draw_flyover(#{locator}, #{options})")
+    log(locator, options)
 
     attribute_name = options.fetch(:attribute, 'title')
     offset_x = options.fetch(:offset_x, 5)
@@ -992,7 +1005,7 @@ class Rudra
   # @option padding [Integer] :left (5) left padding
   # @return [Selenium::WebDriver::Element] the redmark element
   def draw_redmark(locator, padding = {})
-    log("- draw_redmark(#{locator}, #{padding})")
+    log(locator, padding)
 
     top = padding.fetch(:top, 5)
     right = padding.fetch(:right, 5)
@@ -1030,7 +1043,7 @@ class Rudra
   # @option options [Integer] :offset_y (0) offset on y coordinate
   # @return [Selenium::WebDriver::Element] the dropdown menu element
   def draw_select(locator, options = {})
-    log("- draw_select(#{locator}, #{options})")
+    log(locator, options)
 
     offset_x = options.fetch(:offset_x, 0)
     offset_y = options.fetch(:offset_y, 0)
@@ -1092,7 +1105,7 @@ class Rudra
   # @option options [Integer] :right (20) CSS style of right
   # @return [Selenium::WebDriver::Element] the text element
   def draw_text(locator, text, options = {})
-    log("- draw_text(#{locator}, #{text}, #{options})")
+    log(locator, text, options)
 
     color = options.fetch(:color, '#f00')
     font_size = options.fetch(:font_size, 13)
@@ -1127,7 +1140,7 @@ class Rudra
   # Create directories, recursively, for the given dir
   # @param [String] dir the directories to create
   def mkdir(dir)
-    log("- mkdir(#{dir})")
+    log(dir)
     FileUtils.mkdir_p(dir)
   end
 
@@ -1142,6 +1155,10 @@ class Rudra
     @browser = brw
   end
 
+  def install_dir=(path)
+    Webdrivers.install_dir = @install_dir = path
+  end
+
   def locale=(loc)
     @locale = if browser == :firefox
                 loc.to_s.sub('_', '-').gsub(/(-[a-zA-Z]{2})$/, &:downcase)
@@ -1150,11 +1167,19 @@ class Rudra
               end
   end
 
+  def log_prefix=(prefix)
+    @log_prefix = prefix.chomp
+  end
+
   def timeout=(seconds)
     implicit_wait(seconds)
     page_load(seconds)
     script_timeout(seconds)
     @timeout = seconds
+  end
+
+  def verbose=(mode)
+    @verbose = [1, true, '1', 'true'].include?(mode)
   end
 
   def initialize_driver
@@ -1201,8 +1226,14 @@ class Rudra
     [how, what]
   end
 
-  def log(message)
-    puts message if @verbose && caller(2..2).first[/`([^']*)'/, 1] == '<main>'
+  def log(*args)
+    return unless @verbose && caller_locations(2, 1).first.label == '<main>'
+
+    function = caller_locations(1, 1).first.label
+    arguments = args.map(&:to_s).join(', ')
+    puts @log_prefix + (
+      arguments.empty? ? function : "#{function}(#{arguments})"
+    )
   end
 
   def random_id(length = 8)
