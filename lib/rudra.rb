@@ -474,6 +474,15 @@ class Rudra
       .perform
   end
 
+  # Get the value of the given CSS property of the given element
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [String] property the longhand name of the property
+  def css_value(locator, property)
+    log(locator, property)
+    find_element(locator).css_value(property)
+  end
+
   # If the given element, identified by locator, is displayed
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element

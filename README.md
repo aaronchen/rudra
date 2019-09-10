@@ -43,6 +43,6 @@ If **_how_** is not specified, locator starting with `//` or `(` will be parsed 
 # Documentation
 
 - [Rudra Documentation](https://aaronchen.github.io/rudra/Rudra.html)
-- [Ruby selenium-webdriver 3.142.3](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium)
-- [Selenium::WebDriver::ActionBuilder](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium/WebDriver/ActionBuilder)
-- [Selenium::WebDriver::Keys](https://www.rubydoc.info/gems/selenium-webdriver/3.142.3/Selenium/WebDriver/Keys)
+- [Ruby selenium-webdriver 3.142.3](https://www.rubydoc.info/gems/selenium-webdriver/3.142.4/Selenium)
+- [Selenium::WebDriver::ActionBuilder](https://www.rubydoc.info/gems/selenium-webdriver/3.142.4/Selenium/WebDriver/ActionBuilder)
+- [Selenium::WebDriver::Keys](https://www.rubydoc.info/gems/selenium-webdriver/3.142.4/Selenium/WebDriver/Keys)
