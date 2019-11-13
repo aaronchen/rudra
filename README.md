@@ -36,7 +36,7 @@ rudra.quit
 - `xpath=//span/a`
 - etc
 
-If **_how_** is not specified, locator starting with `//` or `(` will be parsed as **xpath**, while `.`, `[` and `#` are treated as **css**.
+If **_how_** is not specified, locator starting with `/` or `(` will be parsed as **xpath**, while `.`, `[` and `#` are treated as **css**.
 
 **css** pseudo selector support => `:eq()`
 

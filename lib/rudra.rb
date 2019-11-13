@@ -1223,7 +1223,7 @@ class Rudra
             case unmatched
             when /^[\.#\[]/
               :css
-            when %r{^(\/\/|\()}
+            when %r{^(\/|\()}
               :xpath
             end
           else
