@@ -736,7 +736,7 @@ class Rudra
   # @param [String] value the value of the attribute
   def set_attribute(locator, attribute, value)
     log(locator, attribute, value)
-    executeScript(%(
+    execute_script(%(
       var element = arguments[0];
       var attribute = arguments[1];
       var value = arguments[2];
@@ -1059,7 +1059,7 @@ class Rudra
 
     id = random_id
 
-    executeScript(%(
+    execute_script(%(
       var element = arguments[0];
       var rect = element.getBoundingClientRect();
       var x = rect.left;
