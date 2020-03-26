@@ -25,7 +25,7 @@ class Rudra
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
-              :log_prefix, :timeout, :verbose
+              :headless, :log_prefix, :timeout, :verbose
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -34,6 +34,7 @@ class Rudra
   # @option options [String] :install_dir ('./webdrivers/') the install
   #   directory of WebDrivers
   # @option options [Symbol] :locale (:en) the browser locale
+  # @option options [Boolean] :headless (false) headless mode
   # @option options [String] :log_prefix (' - ') log prefix
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (true) verbose mode
@@ -41,6 +42,7 @@ class Rudra
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
     self.locale = options.fetch(:locale, :en)
+    self.headless = options.fetch(:headless, false)
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, true)
 
@@ -355,6 +357,14 @@ class Rudra
   def wait_for(seconds = timeout)
     log(seconds)
     Selenium::WebDriver::Wait.new(timeout: seconds).until { yield }
+  end
+
+  # Wait until the element, identified by locator, is enabled
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  def wait_for_enabled(locator)
+    log(locator)
+    wait_for { find_element(locator).enabled? }
   end
 
   # Wait until the title of the page including the given string
@@ -1176,6 +1186,10 @@ class Rudra
               end
   end
 
+  def headless=(mode)
+    @headless = true?(mode)
+  end
+
   def log_prefix=(prefix)
     @log_prefix = prefix.chomp
   end
@@ -1188,7 +1202,11 @@ class Rudra
   end
 
   def verbose=(mode)
-    @verbose = [1, true, '1', 'true'].include?(mode)
+    @verbose = true?(mode)
+  end
+
+  def true?(mode)
+    [1, true, '1', 'true'].include?(mode)
   end
 
   def initialize_driver
@@ -1203,8 +1221,8 @@ class Rudra
 
   def chrome_options
     options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('disable-infobars')
-    options.add_argument('disable-notifications')
+    options.add_argument('--disable-notifications')
+    options.add_argument('--headless') if headless
     options.add_preference('intl.accept_languages', locale)
     options
   end
@@ -1212,6 +1230,7 @@ class Rudra
   def firefox_options
     options = Selenium::WebDriver::Firefox::Options.new
     options.add_preference('intl.accept_languages', locale)
+    options.add_argument('--headless') if headless
     options
   end
 
