@@ -50,6 +50,7 @@ class Rudra
 
     self.timeout = options.fetch(:timeout, 30)
 
+    @main_label = caller_locations(2, 1).first.label
     @verbose && (
         puts %(
           ============ Rudra ============
@@ -1255,7 +1256,7 @@ class Rudra
   end
 
   def log(*args)
-    return unless @verbose && caller_locations(2, 1).first.label == '<main>'
+    return unless @verbose && caller_locations(2, 1).first.label == @main_label
 
     function = caller_locations(1, 1).first.label
     arguments = args.map(&:to_s).join(', ')
