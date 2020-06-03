@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rudra'
-  spec.version       = '1.0.13'
-  spec.date          = '2020-04-23'
+  spec.version       = '1.0.14'
+  spec.date          = '2020-06-01'
   spec.author        = 'Aaron Chen'
-  spec.email         = 'aaron@oobo.be'
+  spec.email         = 'aaron@611b.com'
 
   spec.summary       = %(Selenium IDE-like Webdriver)
   spec.description   = %(Selenium IDE alternative using selenium-webdriver)
@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.files         = ['lib/rudra.rb']
   spec.license       = 'MIT'
 
-  spec.add_development_dependency 'yard', '~> 0.9.24'
+  spec.add_development_dependency 'yard', '~> 0.9.25'
   spec.add_dependency 'selenium-webdriver', '~> 3.142', '>= 3.142.7'
-  spec.add_dependency 'webdrivers', '~> 4.3', '>= 4.3.0'
+  spec.add_dependency 'webdrivers', '~> 4.4', '>= 4.4.1'
 end

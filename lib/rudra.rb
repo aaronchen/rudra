@@ -1,6 +1,7 @@
 require 'selenium-webdriver'
 require 'webdrivers/chromedriver'
 require 'webdrivers/geckodriver'
+require 'webdrivers/iedriver'
 
 # Selenium::WebDriver::Chrome::Service.driver_path = './webdrivers/chromedriver'
 # Selenium::WebDriver::Firefox::Service.driver_path = './webdrivers/geckodriver'
@@ -16,7 +17,7 @@ require 'webdrivers/geckodriver'
 # @attr_reader [Boolean] verbose Verbose mode
 class Rudra
   # Supported Browsers
-  BROWSERS = %i[chrome firefox safari].freeze
+  BROWSERS = %i[chrome firefox ie safari].freeze
 
   # Element Finder Methods
   HOWS = %i[
@@ -51,19 +52,11 @@ class Rudra
     self.headless = options.fetch(:headless, false)
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, true)
+    self.main_label = caller_locations(2, 1).first.label
 
     initialize_driver
 
     self.timeout = options.fetch(:timeout, 30)
-
-    @main_label = caller_locations(2, 1).first.label
-    @verbose && (
-        puts %(
-          ============ Rudra ============
-          Browser: #{@browser}, Locale: #{@locale}
-          ============  Log  ============
-        ).lines.map(&:strip).reject(&:empty?).join("\n")
-      )
   end
 
   #
@@ -1066,9 +1059,7 @@ class Rudra
   end
 
   (instance_methods - superclass.instance_methods).map do |method_name|
-    if private_method_defined?(method_name) || ATTRIBUTES.include?(method_name)
-      next
-    end
+    next if private_method_defined?(method_name) || ATTRIBUTES.include?(method_name)
 
     original_method = instance_method(method_name)
 
@@ -1079,6 +1070,8 @@ class Rudra
   end
 
   private
+
+  attr_writer :main_label
 
   def browser=(brw)
     unless BROWSERS.include?(brw)
@@ -1129,6 +1122,8 @@ class Rudra
                 Selenium::WebDriver.for(:chrome, options: chrome_options)
               elsif browser == :firefox
                 Selenium::WebDriver.for(:firefox, options: firefox_options)
+              elsif browser == :ie
+                Selenium::WebDriver.for(:ie, options: ie_options)
               else
                 Selenium::WebDriver.for(:safari)
               end
@@ -1138,6 +1133,10 @@ class Rudra
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--disable-notifications')
     options.add_argument('--headless') if headless
+    options.add_option(
+      'excludeSwitches',
+      %w[enable-automation enable-logging]
+    )
     options.add_preference('intl.accept_languages', locale)
     options
   end
@@ -1146,6 +1145,16 @@ class Rudra
     options = Selenium::WebDriver::Firefox::Options.new
     options.add_preference('intl.accept_languages', locale)
     options.add_argument('--headless') if headless
+    options
+  end
+
+  def ie_options
+    options = Selenium::WebDriver::IE::Options.new
+    options.ensure_clean_session = true
+    options.full_page_screenshot = true
+    options.ignore_protected_mode_settings = true
+    options.ignore_zoom_level = true
+    options.native_events = false
     options
   end
 
@@ -1170,7 +1179,7 @@ class Rudra
   end
 
   def log(method_name, *args)
-    return unless @verbose && caller_locations(2, 1).first.label == @main_label
+    return unless @verbose && caller_locations(2, 1).first.label == main_label
 
     arguments = args.map(&:to_s).join(', ')
 

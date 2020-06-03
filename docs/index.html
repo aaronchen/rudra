@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.9.24
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
@@ -58,69 +58,63 @@
       </div>
 
       <div id="content"><div id='filecontents'>
-<h1 id="label-rudra">rudra</h1>
+<h1 id="rudra">rudra</h1>
 
 <p>Rudra: A Selenium IDE alternative using Ruby binding of selenium-webdriver.</p>
 
-<h1 id="label-Install">Install</h1>
+<h1 id="install">Install</h1>
 
 <p><code>gem install rudra</code></p>
 
-<h1 id="label-How+To+Use">How To Use</h1>
+<h1 id="how_to_use">How To Use</h1>
 
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rudra</span><span class='tstring_end'>&#39;</span></span>
+<p>“by require ‘rudra’</p>
 
-<span class='id identifier rubyid_rudra'>rudra</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Rudra.html" title="Rudra (class)">Rudra</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Rudra.html#initialize-instance_method" title="Rudra#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='label'>browser:</span> <span class='symbol'>:chrome</span><span class='comma'>,</span> <span class='label'>locale:</span> <span class='symbol'>:zh_tw</span><span class='rparen'>)</span>
+<p>rudra = Rudra.new(browser: :chrome, locale: :zh_tw)</p>
 
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>./screenshots</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://www.google.com</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_send_keys'>send_keys</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>name=q</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>webdriver</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='symbol'>:enter</span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_title'>wait_for_title</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>webdriver</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_click'>click</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>#nav a.fl:eq(1)</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_scroll_into_view'>scroll_into_view</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.fbar</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_draw_redmark'>draw_redmark</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>#fsl</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_save_screenshot'>save_screenshot</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>./screenshots/sample.png</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_clear_drawings'>clear_drawings</span>
-<span class='id identifier rubyid_rudra'>rudra</span><span class='period'>.</span><span class='id identifier rubyid_quit'>quit</span>
-</code></pre>
+<p>rudra.mkdir(‘./screenshots’) rudra.open(‘https://www.google.com’) rudra.send_keys(‘name=q’, ‘webdriver’, :enter) rudra.wait_for_title(‘webdriver’) rudra.click(‘#foot a.fl:eq(1)’) rudra.scroll_into_view(‘#fbar’) rudra.draw_redmark(‘#fsl’) rudra.save_screenshot(‘./screenshots/sample.png’) rudra.clear_drawings rudra.quit</p>
 
-<h1 id="label-Supported+locator">Supported <strong><em>locator</em></strong></h1>
+<p>“</p>
 
-<p><strong><em>Format: &#39;how=what&#39;</em></strong></p>
-<ul><li>
-<p><code>css=.btn</code></p>
-</li><li>
-<p><code>class=btn-primary</code></p>
-</li><li>
-<p><code>id=frame1</code></p>
-</li><li>
-<p><code>name=j_username</code></p>
-</li><li>
-<p><code>xpath=//span/a</code></p>
-</li><li>
-<p>etc</p>
-</li></ul>
+<h1 id="supported_locator">Supported <strong><em>locator</em></strong></h1>
+
+<p><strong><em>Format: ‘how=what’</em></strong></p>
+
+<ul>
+<li><code>css=.btn</code></li>
+
+<li><code>class=btn-primary</code></li>
+
+<li><code>id=frame1</code></li>
+
+<li><code>name=j_username</code></li>
+
+<li><code>xpath=//span/a</code></li>
+
+<li>etc</li>
+</ul>
 
 <p>If <strong><em>how</em></strong> is not specified, locator starting with <code>/</code> or <code>(</code> will be parsed as <strong>xpath</strong>, while <code>.</code>, <code>[</code> and <code>#</code> are treated as <strong>css</strong>.</p>
 
 <p><strong>css</strong> pseudo selector support =&gt; <code>:eq()</code></p>
 
-<h1 id="label-Documentation">Documentation</h1>
-<ul><li>
-<p><a href="https://aaronchen.github.io/rudra/Rudra.html">Rudra Documentation</a></p>
-</li><li>
-<p><a href="https://www.rubydoc.info/gems/selenium-webdriver">Ruby selenium-webdriver</a></p>
-</li><li>
-<p><a href="https://www.rubydoc.info/gems/selenium-webdriver/Selenium/WebDriver/ActionBuilder">Selenium::WebDriver::ActionBuilder</a></p>
-</li><li>
-<p><a href="https://www.rubydoc.info/gems/selenium-webdriver/Selenium/WebDriver/Keys">Selenium::WebDriver::Keys</a></p>
-</li></ul>
+<h1 id="documentation">Documentation</h1>
+
+<ul>
+<li><a href="https://aaronchen.github.io/rudra/Rudra.html">Rudra Documentation</a></li>
+
+<li><a href="https://www.rubydoc.info/gems/selenium-webdriver">Ruby selenium-webdriver</a></li>
+
+<li><a href="https://www.rubydoc.info/gems/selenium-webdriver/Selenium/WebDriver/ActionBuilder">Selenium::WebDriver::ActionBuilder</a></li>
+
+<li><a href="https://www.rubydoc.info/gems/selenium-webdriver/Selenium/WebDriver/Keys">Selenium::WebDriver::Keys</a></li>
+</ul>
 </div></div>
 
       <div id="footer">
-  Generated on Thu Apr 23 22:50:06 2020 by
+  Generated on Wed Jun  3 18:17:42 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.5).
+  0.9.25 (ruby-2.6.6).
 </div>
 
     </div>
