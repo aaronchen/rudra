@@ -15,7 +15,7 @@ require 'webdrivers/iedriver'
 # @attr_reader [String] locale The browser locale
 # @attr_reader [Boolean] headless Headless mode for Google Chrome
 # @attr_reader [String] screen_dir The screenshot directory of save_screenshot
-# @attr_reader [String] log_prefix Prefix for loggins executed methods
+# @attr_reader [String] log_prefix Prefix for logging executed methods
 # @attr_reader [Integer] timeout The driver timeout
 # @attr_reader [Boolean] verbose Verbose mode
 class Rudra
@@ -54,7 +54,7 @@ class Rudra
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
-    self.locale = options.fetch(:locale, :enscreens)
+    self.locale = options.fetch(:locale, :en)
     self.headless = options.fetch(:headless, false)
     self.screen_dir = options.fetch(:screen_dir, './screens/')
     self.log_prefix = options.fetch(:log_prefix, ' - ')
