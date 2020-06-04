@@ -32,7 +32,8 @@ class Rudra
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
-              :headless, :log_prefix, :timeout, :verbose
+              :headless, :screen_dir, :log_prefix,
+              :timeout, :verbose
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -42,14 +43,16 @@ class Rudra
   #   directory of WebDrivers
   # @option options [Symbol] :locale (:en) the browser locale
   # @option options [Boolean] :headless (false) headless mode
+  # @option options [String] :screen_dir ('.//') the location of screenshots
   # @option options [String] :log_prefix (' - ') log prefix
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (true) verbose mode
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
-    self.locale = options.fetch(:locale, :en)
+    self.locale = options.fetch(:locale, :enscreens)
     self.headless = options.fetch(:headless, false)
+    self.screen_dir = options.fetch(:screen_dir, './screens/')
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, true)
     self.main_label = caller_locations(2, 1).first.label
@@ -271,11 +274,15 @@ class Rudra
     driver.manage.window.resize_to(width, height)
   end
 
-  # Save a PNG screenshot to the given path
-  # @param [String] png_path the path of PNG screenshot
-  def save_screenshot(png_path)
+  # Save a PNG screenshot to file
+  # @param [String] filename the filename of PNG screenshot
+  def save_screenshot(filename)
+    mkdir(@screen_dir) unless Dir.exist?(@screen_dir)
     driver.save_screenshot(
-      png_path.end_with?('.png') ? png_path : "#{png_path}.png"
+      File.join(
+        @screen_dir,
+        filename.end_with?('.png') ? filename : "#{filename}.png"
+      )
     )
   end
 
@@ -1098,6 +1105,10 @@ class Rudra
     @headless = true?(mode)
   end
 
+  def screen_dir=(path)
+    @screen_dir = File.join(path, @locale.to_s)
+  end
+
   def log_prefix=(prefix)
     @log_prefix = prefix.chomp
   end
@@ -1179,7 +1190,7 @@ class Rudra
   end
 
   def log(method_name, *args)
-    return unless @verbose && caller_locations(2, 1).first.label == main_label
+    return unless @verbose && caller_locations(2, 1).first.label == @main_label
 
     arguments = args.map(&:to_s).join(', ')
 
