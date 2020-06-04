@@ -1,10 +1,5 @@
 require 'selenium-webdriver'
-require 'webdrivers/chromedriver'
-require 'webdrivers/geckodriver'
-require 'webdrivers/iedriver'
-
-# Selenium::WebDriver::Chrome::Service.driver_path = './webdrivers/chromedriver'
-# Selenium::WebDriver::Firefox::Service.driver_path = './webdrivers/geckodriver'
+require 'webdrivers'
 
 # Selenium IDE-like WebDriver based upon Ruby binding
 # @author Aaron Chen
@@ -14,6 +9,7 @@ require 'webdrivers/iedriver'
 # @attr_reader [String] install_dir The install directory of WebDrivers
 # @attr_reader [String] locale The browser locale
 # @attr_reader [Boolean] headless Headless mode for Google Chrome
+# @attr_reader [String] window_size Chrome window size when headless
 # @attr_reader [String] screen_dir The screenshot directory of save_screenshot
 # @attr_reader [String] log_prefix Prefix for logging executed methods
 # @attr_reader [Integer] timeout The driver timeout
@@ -31,13 +27,13 @@ class Rudra
   # Attributes
   ATTRIBUTES = %i[
     browser driver install_dir locale
-    headless screen_dir log_prefix
-    timeout verbose
+    headless window_size screen_dir
+    log_prefix timeout verbose
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
-              :headless, :screen_dir, :log_prefix,
-              :timeout, :verbose
+              :headless, :window_size, :screen_dir,
+              :log_prefix, :timeout, :verbose
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -47,6 +43,7 @@ class Rudra
   #   directory of WebDrivers
   # @option options [Symbol] :locale (:en) the browser locale
   # @option options [Boolean] :headless (false) headless mode
+  # @option options [String] :window_size ('1280,720') window size when headless
   # @option options [String] :screen_dir ('./screens/') the location of screenshots
   # @option options [String] :log_prefix (' - ') prefix for logging executed methods
   # @option options [Integer] :timeout (30) implicit_wait timeout
@@ -56,6 +53,7 @@ class Rudra
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
     self.locale = options.fetch(:locale, :en)
     self.headless = options.fetch(:headless, false)
+    self.window_size = options.fetch(:window_size, '1280,720')
     self.screen_dir = options.fetch(:screen_dir, './screens/')
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, true)
@@ -104,6 +102,7 @@ class Rudra
   end
 
   # Send keys to an alert
+  # @param [String] keys keystrokes to send
   def alert_send_keys(keys)
     switch_to_alert.send_keys(keys)
   end
@@ -208,7 +207,7 @@ class Rudra
 
   # Maximize the current window
   def maximize
-    driver.manage.window.maximize
+    driver.manage.window.maximize unless headless
   end
 
   # Maximize the current window to the size of the screen
@@ -1082,7 +1081,8 @@ class Rudra
 
   private
 
-  attr_writer :main_label
+  attr_accessor :main_label
+  attr_writer :window_size
 
   def browser=(brw)
     unless BROWSERS.include?(brw)
@@ -1135,6 +1135,8 @@ class Rudra
   def initialize_driver
     @driver = if browser == :chrome
                 Selenium::WebDriver.for(:chrome, options: chrome_options)
+              # elsif browser == :edge
+              #   Selenium::WebDriver.for(:edge, options: edge_options)
               elsif browser == :firefox
                 Selenium::WebDriver.for(:firefox, options: firefox_options)
               elsif browser == :ie
@@ -1147,7 +1149,10 @@ class Rudra
   def chrome_options
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--disable-notifications')
-    options.add_argument('--headless') if headless
+    if headless
+      options.add_argument('--headless')
+      options.add_argument("--window-size=#{window_size}")
+    end
     options.add_option(
       'excludeSwitches',
       %w[enable-automation enable-logging]
@@ -1155,6 +1160,10 @@ class Rudra
     options.add_preference('intl.accept_languages', locale)
     options
   end
+
+  # def edge_options
+  #   Selenium::WebDriver::Edge::Options.new
+  # end
 
   def firefox_options
     options = Selenium::WebDriver::Firefox::Options.new
@@ -1194,11 +1203,11 @@ class Rudra
   end
 
   def log(method_name, *args)
-    return unless @verbose && caller_locations(2, 1).first.label == @main_label
+    return unless verbose && caller_locations(2, 1).first.label == main_label
 
     arguments = args.map(&:to_s).join(', ')
 
-    puts @log_prefix + (
+    puts log_prefix + (
       arguments.empty? ? method_name.to_s : "#{method_name}(#{arguments})"
     )
   end

@@ -186,8 +186,8 @@
         </dt>
         <dd><pre class="code"><span class='qsymbols_beg'>%i[</span><span class='words_sep'>
   </span><span class='tstring_content'>browser</span><span class='words_sep'> </span><span class='tstring_content'>driver</span><span class='words_sep'> </span><span class='tstring_content'>install_dir</span><span class='words_sep'> </span><span class='tstring_content'>locale</span><span class='words_sep'>
-  </span><span class='tstring_content'>headless</span><span class='words_sep'> </span><span class='tstring_content'>screen_dir</span><span class='words_sep'> </span><span class='tstring_content'>log_prefix</span><span class='words_sep'>
-  </span><span class='tstring_content'>timeout</span><span class='words_sep'> </span><span class='tstring_content'>verbose</span><span class='words_sep'>
+  </span><span class='tstring_content'>headless</span><span class='words_sep'> </span><span class='tstring_content'>window_size</span><span class='words_sep'> </span><span class='tstring_content'>screen_dir</span><span class='words_sep'>
+  </span><span class='tstring_content'>log_prefix</span><span class='words_sep'> </span><span class='tstring_content'>timeout</span><span class='words_sep'> </span><span class='tstring_content'>verbose</span><span class='words_sep'>
 </span><span class='tstring_end'>]</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
     </dl>
@@ -455,6 +455,35 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Verbose mode.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#window_size-instance_method" title="#window_size (instance method)">#<strong>window_size</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Chrome window size when headless.</p>
 </div></span>
   
 </li>
@@ -2729,6 +2758,22 @@
         </li>
       
         <li>
+          <span class="name">:window_size</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>&#39;1280,720&#39;</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>window size when headless</p>
+</div>
+          
+        </li>
+      
+        <li>
           <span class="name">:screen_dir</span>
           <span class="type">(<tt>String</tt>)</span>
           <span class="default">
@@ -2802,6 +2847,9 @@
       <pre class="lines">
 
 
+51
+52
+53
 54
 55
 56
@@ -2813,18 +2861,17 @@
 62
 63
 64
-65
-66
-67</pre>
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 54</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_browser'>browser</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:browser</span><span class='comma'>,</span> <span class='symbol'>:chrome</span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_install_dir'>install_dir</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:install_dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>./webdrivers/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_locale'>locale</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:locale</span><span class='comma'>,</span> <span class='symbol'>:en</span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_headless'>headless</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:headless</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_window_size'>window_size</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:window_size</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1280,720</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_screen_dir'>screen_dir</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:screen_dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>./screens/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log_prefix'>log_prefix</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:log_prefix</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> - </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_verbose'>verbose</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:verbose</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -2890,12 +2937,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_browser'>browser</span>
   <span class='ivar'>@browser</span>
@@ -2951,12 +2998,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_driver'>driver</span>
   <span class='ivar'>@driver</span>
@@ -3012,12 +3059,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_headless'>headless</span>
   <span class='ivar'>@headless</span>
@@ -3073,12 +3120,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_install_dir'>install_dir</span>
   <span class='ivar'>@install_dir</span>
@@ -3134,12 +3181,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_locale'>locale</span>
   <span class='ivar'>@locale</span>
@@ -3195,12 +3242,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_log_prefix'>log_prefix</span>
   <span class='ivar'>@log_prefix</span>
@@ -3256,12 +3303,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_screen_dir'>screen_dir</span>
   <span class='ivar'>@screen_dir</span>
@@ -3317,12 +3364,12 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_timeout'>timeout</span>
   <span class='ivar'>@timeout</span>
@@ -3378,15 +3425,76 @@
       <pre class="lines">
 
 
-21
-22
-23</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verbose'>verbose</span>
   <span class='ivar'>@verbose</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="window_size=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="window_size-instance_method">
+  
+    #<strong>window_size</strong>  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Chrome window size when headless</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current value of window_size</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 17</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_window_size'>window_size</span>
+  <span class='ivar'>@window_size</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -3444,12 +3552,12 @@
       <pre class="lines">
 
 
-75
-76
-77</pre>
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 75</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_action'>action</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_action'>action</span>
@@ -3503,12 +3611,12 @@
       <pre class="lines">
 
 
-81
-82
-83</pre>
+79
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 81</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 79</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_active_element'>active_element</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_active_element'>active_element</span>
@@ -3649,12 +3757,12 @@
       <pre class="lines">
 
 
-92
-93
-94</pre>
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 92</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 90</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_cookie'>add_cookie</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_add_cookie'>add_cookie</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
@@ -3690,12 +3798,12 @@
       <pre class="lines">
 
 
-97
-98
-99</pre>
+95
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 97</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 95</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_alert_accept'>alert_accept</span>
   <span class='id identifier rubyid_switch_to_alert'>switch_to_alert</span><span class='period'>.</span><span class='id identifier rubyid_accept'>accept</span>
@@ -3731,12 +3839,12 @@
       <pre class="lines">
 
 
-102
-103
-104</pre>
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 102</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 100</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_alert_dismiss'>alert_dismiss</span>
   <span class='id identifier rubyid_switch_to_alert'>switch_to_alert</span><span class='period'>.</span><span class='id identifier rubyid_dismiss'>dismiss</span>
@@ -3764,7 +3872,27 @@
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>keys</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>keystrokes to send</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -3772,12 +3900,12 @@
       <pre class="lines">
 
 
+106
 107
-108
-109</pre>
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 107</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_alert_send_keys'>alert_send_keys</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_switch_to_alert'>switch_to_alert</span><span class='period'>.</span><span class='id identifier rubyid_send_keys'>send_keys</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='rparen'>)</span>
@@ -3867,12 +3995,12 @@
       <pre class="lines">
 
 
+386
 387
-388
-389</pre>
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 387</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 386</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_attribute'>attribute</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_property'>property</span><span class='lparen'>(</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span>
@@ -3962,14 +4090,14 @@
       <pre class="lines">
 
 
+395
 396
 397
 398
-399
-400</pre>
+399</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 396</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 395</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_attribute?'>attribute?</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -4007,12 +4135,12 @@
       <pre class="lines">
 
 
+111
 112
-113
-114</pre>
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 112</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_back'>back</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_navigate'>navigate</span><span class='period'>.</span><span class='id identifier rubyid_back'>back</span>
@@ -4048,12 +4176,12 @@
       <pre class="lines">
 
 
+116
 117
-118
-119</pre>
+118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 117</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_blank'>blank</span>
   <span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>about:blank</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -4109,15 +4237,15 @@
       <pre class="lines">
 
 
+404
 405
 406
 407
 408
-409
-410</pre>
+409</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 405</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 404</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_blur'>blur</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span>
@@ -4176,12 +4304,12 @@
       <pre class="lines">
 
 
+414
 415
-416
-417</pre>
+416</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 415</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 414</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear'>clear</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_clear'>clear</span>
@@ -4217,6 +4345,7 @@
       <pre class="lines">
 
 
+740
 741
 742
 743
@@ -4225,11 +4354,10 @@
 746
 747
 748
-749
-750</pre>
+749</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 741</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 740</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_drawings'>clear_drawings</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -4292,12 +4420,12 @@
       <pre class="lines">
 
 
+421
 422
-423
-424</pre>
+423</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 422</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 421</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_click'>click</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_click'>click</span>
@@ -4414,6 +4542,7 @@
       <pre class="lines">
 
 
+431
 432
 433
 434
@@ -4423,11 +4552,10 @@
 438
 439
 440
-441
-442</pre>
+441</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 432</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 431</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_click_at'>click_at</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_offset'>offset</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_offset'>offset</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:x</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -4471,12 +4599,12 @@
       <pre class="lines">
 
 
+121
 122
-123
-124</pre>
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 122</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 121</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_close'>close</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
@@ -4550,12 +4678,12 @@
       <pre class="lines">
 
 
+128
 129
-130
-131</pre>
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 129</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cookie_named'>cookie_named</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_cookie_named'>cookie_named</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
@@ -4627,12 +4755,12 @@
       <pre class="lines">
 
 
+447
 448
-449
-450</pre>
+449</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 448</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 447</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_css_value'>css_value</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_property'>property</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_css_value'>css_value</span><span class='lparen'>(</span><span class='id identifier rubyid_property'>property</span><span class='rparen'>)</span>
@@ -4686,12 +4814,12 @@
       <pre class="lines">
 
 
+134
 135
-136
-137</pre>
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 135</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 134</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_url'>current_url</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_current_url'>current_url</span>
@@ -4727,12 +4855,12 @@
       <pre class="lines">
 
 
+139
 140
-141
-142</pre>
+141</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 140</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 139</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_all_cookies'>delete_all_cookies</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_delete_all_cookies'>delete_all_cookies</span>
@@ -4788,12 +4916,12 @@
       <pre class="lines">
 
 
+145
 146
-147
-148</pre>
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 146</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 145</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_cookie'>delete_cookie</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_delete_cookie'>delete_cookie</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
@@ -4862,12 +4990,12 @@
       <pre class="lines">
 
 
+455
 456
-457
-458</pre>
+457</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 456</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 455</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_displayed?'>displayed?</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_displayed?'>displayed?</span>
@@ -4984,6 +5112,7 @@
       <pre class="lines">
 
 
+465
 466
 467
 468
@@ -4993,11 +5122,10 @@
 472
 473
 474
-475
-476</pre>
+475</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 466</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 465</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_double_click'>double_click</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_offset'>offset</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_offset'>offset</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:x</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -5077,15 +5205,15 @@
       <pre class="lines">
 
 
+481
 482
 483
 484
 485
-486
-487</pre>
+486</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 482</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 481</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_drag_and_drop'>drag_and_drop</span><span class='lparen'>(</span><span class='id identifier rubyid_from_locator'>from_locator</span><span class='comma'>,</span> <span class='id identifier rubyid_to_locator'>to_locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_el1'>el1</span> <span class='op'>=</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_from_locator'>from_locator</span><span class='rparen'>)</span>
@@ -5205,16 +5333,16 @@
       <pre class="lines">
 
 
+493
 494
 495
 496
 497
 498
-499
-500</pre>
+499</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 494</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 493</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_drag_and_drop_by'>drag_and_drop_by</span><span class='lparen'>(</span><span class='id identifier rubyid_source'>source</span><span class='comma'>,</span> <span class='id identifier rubyid_offset'>offset</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_element'>element</span> <span class='op'>=</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_source'>source</span><span class='rparen'>)</span>
@@ -5308,6 +5436,7 @@
       <pre class="lines">
 
 
+757
 758
 759
 760
@@ -5367,11 +5496,10 @@
 814
 815
 816
-817
-818</pre>
+817</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 758</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 757</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_arrow'>draw_arrow</span><span class='lparen'>(</span><span class='id identifier rubyid_from_locator'>from_locator</span><span class='comma'>,</span> <span class='id identifier rubyid_to_locator'>to_locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_random_id'>random_id</span>
@@ -5521,6 +5649,7 @@
       <pre class="lines">
 
 
+824
 825
 826
 827
@@ -5543,11 +5672,10 @@
 844
 845
 846
-847
-848</pre>
+847</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 825</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 824</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_color_fill'>draw_color_fill</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_color'>color</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rgba(255,0,0,0.8)</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_rectangle'>rectangle</span> <span class='op'>=</span> <span class='id identifier rubyid_rect'>rect</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
@@ -5751,6 +5879,7 @@
       <pre class="lines">
 
 
+861
 862
 863
 864
@@ -5816,11 +5945,10 @@
 924
 925
 926
-927
-928</pre>
+927</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 862</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 861</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_flyover'>draw_flyover</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_attribute_name'>attribute_name</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:attribute</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>title</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -6051,6 +6179,7 @@
       <pre class="lines">
 
 
+938
 939
 940
 941
@@ -6077,11 +6206,10 @@
 962
 963
 964
-965
-966</pre>
+965</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 939</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 938</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_redmark'>draw_redmark</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_padding'>padding</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_top'>top</span> <span class='op'>=</span> <span class='id identifier rubyid_padding'>padding</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:top</span><span class='comma'>,</span> <span class='int'>5</span><span class='rparen'>)</span>
@@ -6241,6 +6369,7 @@
       <pre class="lines">
 
 
+974
 975
 976
 977
@@ -6288,11 +6417,10 @@
 1019
 1020
 1021
-1022
-1023</pre>
+1022</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 975</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 974</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_select'>draw_select</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_offset_x'>offset_x</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:offset_x</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -6523,6 +6651,7 @@
       <pre class="lines">
 
 
+1034
 1035
 1036
 1037
@@ -6551,11 +6680,10 @@
 1060
 1061
 1062
-1063
-1064</pre>
+1063</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 1035</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 1034</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_draw_text'>draw_text</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_text'>text</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_color'>color</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:color</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>#f00</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -6651,12 +6779,12 @@
       <pre class="lines">
 
 
+505
 506
-507
-508</pre>
+507</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 506</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 505</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enabled?'>enabled?</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span>
@@ -6746,12 +6874,12 @@
       <pre class="lines">
 
 
+156
 157
-158
-159</pre>
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 157</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 156</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -6825,6 +6953,7 @@
       <pre class="lines">
 
 
+164
 165
 166
 167
@@ -6842,11 +6971,10 @@
 179
 180
 181
-182
-183</pre>
+182</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 165</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 164</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_locator'>locator</span> <span class='kw'>if</span> <span class='id identifier rubyid_locator'>locator</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Selenium</span><span class='op'>::</span><span class='const'>WebDriver</span><span class='op'>::</span><span class='const'>Element</span><span class='rparen'>)</span>
@@ -6936,14 +7064,14 @@
       <pre class="lines">
 
 
+187
 188
 189
 190
-191
-192</pre>
+191</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 188</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 187</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_elements'>find_elements</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_locator'>parse_locator</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
@@ -7001,15 +7129,15 @@
       <pre class="lines">
 
 
+512
 513
 514
 515
 516
-517
-518</pre>
+517</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 513</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 512</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_focus'>focus</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span>
@@ -7048,12 +7176,12 @@
       <pre class="lines">
 
 
+194
 195
-196
-197</pre>
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 195</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 194</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_forward'>forward</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_navigate'>navigate</span><span class='period'>.</span><span class='id identifier rubyid_forward'>forward</span>
@@ -7089,12 +7217,12 @@
       <pre class="lines">
 
 
+199
 200
-201
-202</pre>
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 200</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 199</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_full_screen'>full_screen</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_full_screen'>full_screen</span>
@@ -7150,14 +7278,14 @@
       <pre class="lines">
 
 
+522
 523
 524
 525
-526
-527</pre>
+526</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 523</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 522</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_hide'>hide</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -7215,14 +7343,14 @@
       <pre class="lines">
 
 
+531
 532
 533
 534
-535
-536</pre>
+535</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 532</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 531</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_highlight'>highlight</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -7280,12 +7408,12 @@
       <pre class="lines">
 
 
+539
 540
-541
-542</pre>
+541</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 540</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 539</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_implicit_wait'>implicit_wait</span><span class='lparen'>(</span><span class='id identifier rubyid_seconds'>seconds</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_timeouts'>timeouts</span><span class='period'>.</span><span class='id identifier rubyid_implicit_wait'>implicit_wait</span> <span class='op'>=</span> <span class='id identifier rubyid_seconds'>seconds</span>
@@ -7341,12 +7469,12 @@
       <pre class="lines">
 
 
+546
 547
-548
-549</pre>
+548</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 547</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 546</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_js_click'>js_click</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>arguments[0].click();</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -7420,12 +7548,12 @@
       <pre class="lines">
 
 
+554
 555
-556
-557</pre>
+556</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 555</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 554</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_location'>location</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span>
@@ -7461,15 +7589,15 @@
       <pre class="lines">
 
 
+209
 210
-211
-212</pre>
+211</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 210</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 209</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maximize'>maximize</span>
-  <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_maximize'>maximize</span>
+  <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_maximize'>maximize</span> <span class='kw'>unless</span> <span class='id identifier rubyid_headless'>headless</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -7502,17 +7630,17 @@
       <pre class="lines">
 
 
+214
 215
 216
 217
 218
 219
 220
-221
-222</pre>
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 215</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 214</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maximize_to_screen'>maximize_to_screen</span>
   <span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -7553,12 +7681,12 @@
       <pre class="lines">
 
 
+224
 225
-226
-227</pre>
+226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 225</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 224</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_minimize'>minimize</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_minimize'>minimize</span>
@@ -7614,12 +7742,12 @@
       <pre class="lines">
 
 
+1067
 1068
-1069
-1070</pre>
+1069</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 1068</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 1067</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
   <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
@@ -7695,12 +7823,12 @@
       <pre class="lines">
 
 
+561
 562
-563
-564</pre>
+563</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 562</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 561</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_move_by'>move_by</span><span class='lparen'>(</span><span class='id identifier rubyid_right_by'>right_by</span> <span class='op'>=</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_down_by'>down_by</span> <span class='op'>=</span> <span class='int'>0</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_action'>action</span><span class='period'>.</span><span class='id identifier rubyid_move_by'>move_by</span><span class='lparen'>(</span><span class='id identifier rubyid_right_by'>right_by</span><span class='comma'>,</span> <span class='id identifier rubyid_down_by'>down_by</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_perform'>perform</span>
@@ -7817,6 +7945,7 @@
       <pre class="lines">
 
 
+571
 572
 573
 574
@@ -7825,11 +7954,10 @@
 577
 578
 579
-580
-581</pre>
+580</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 572</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 571</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_move_to'>move_to</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_offset'>offset</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_offset'>offset</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:x</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -7908,12 +8036,12 @@
       <pre class="lines">
 
 
+231
 232
-233
-234</pre>
+233</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 232</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 231</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_move_window_to'>move_window_to</span><span class='lparen'>(</span><span class='id identifier rubyid_point_x'>point_x</span><span class='comma'>,</span> <span class='id identifier rubyid_point_y'>point_y</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_move_to'>move_to</span><span class='lparen'>(</span><span class='id identifier rubyid_point_x'>point_x</span><span class='comma'>,</span> <span class='id identifier rubyid_point_y'>point_y</span><span class='rparen'>)</span>
@@ -7967,13 +8095,13 @@
       <pre class="lines">
 
 
+237
 238
 239
-240
-241</pre>
+240</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 238</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 237</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new_tab'>new_tab</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>window.open();</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -8030,6 +8158,7 @@
       <pre class="lines">
 
 
+244
 245
 246
 247
@@ -8039,11 +8168,10 @@
 251
 252
 253
-254
-255</pre>
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 245</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 244</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new_window'>new_window</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -8107,12 +8235,12 @@
       <pre class="lines">
 
 
+258
 259
-260
-261</pre>
+260</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 259</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 258</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
@@ -8168,12 +8296,12 @@
       <pre class="lines">
 
 
+584
 585
-586
-587</pre>
+586</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 585</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 584</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_page_load'>page_load</span><span class='lparen'>(</span><span class='id identifier rubyid_seconds'>seconds</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_timeouts'>timeouts</span><span class='period'>.</span><span class='id identifier rubyid_page_load'>page_load</span> <span class='op'>=</span> <span class='id identifier rubyid_seconds'>seconds</span>
@@ -8227,12 +8355,12 @@
       <pre class="lines">
 
 
+264
 265
-266
-267</pre>
+266</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 265</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 264</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_page_source'>page_source</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_page_source'>page_source</span>
@@ -8268,12 +8396,12 @@
       <pre class="lines">
 
 
+204
 205
-206
-207</pre>
+206</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 205</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_quit'>quit</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_quit'>quit</span>
@@ -8347,12 +8475,12 @@
       <pre class="lines">
 
 
+593
 594
-595
-596</pre>
+595</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 594</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 593</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rect'>rect</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_rect'>rect</span>
@@ -8388,12 +8516,12 @@
       <pre class="lines">
 
 
+269
 270
-271
-272</pre>
+271</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 270</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 269</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_refresh'>refresh</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_navigate'>navigate</span><span class='period'>.</span><span class='id identifier rubyid_refresh'>refresh</span>
@@ -8465,6 +8593,7 @@
       <pre class="lines">
 
 
+602
 603
 604
 605
@@ -8472,11 +8601,10 @@
 607
 608
 609
-610
-611</pre>
+610</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 603</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 602</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_remove_attribute'>remove_attribute</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -8554,12 +8682,12 @@
       <pre class="lines">
 
 
+276
 277
-278
-279</pre>
+278</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 277</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 276</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resize_window_to'>resize_window_to</span><span class='lparen'>(</span><span class='id identifier rubyid_width'>width</span><span class='comma'>,</span> <span class='id identifier rubyid_height'>height</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_resize_to'>resize_to</span><span class='lparen'>(</span><span class='id identifier rubyid_width'>width</span><span class='comma'>,</span> <span class='id identifier rubyid_height'>height</span><span class='rparen'>)</span>
@@ -8676,16 +8804,16 @@
       <pre class="lines">
 
 
+618
 619
 620
 621
 622
 623
-624
-625</pre>
+624</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 619</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 618</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_right_click'>right_click</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_offset'>offset</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_offset'>offset</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:x</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -8745,6 +8873,7 @@
       <pre class="lines">
 
 
+282
 283
 284
 285
@@ -8752,11 +8881,10 @@
 287
 288
 289
-290
-291</pre>
+290</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 283</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 282</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save_screenshot'>save_screenshot</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='ivar'>@screen_dir</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='ivar'>@screen_dir</span><span class='rparen'>)</span>
@@ -8818,12 +8946,12 @@
       <pre class="lines">
 
 
+628
 629
-630
-631</pre>
+630</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 629</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 628</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_script_timeout'>script_timeout</span><span class='lparen'>(</span><span class='id identifier rubyid_seconds'>seconds</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_manage'>manage</span><span class='period'>.</span><span class='id identifier rubyid_timeouts'>timeouts</span><span class='period'>.</span><span class='id identifier rubyid_script_timeout'>script_timeout</span> <span class='op'>=</span> <span class='id identifier rubyid_seconds'>seconds</span>
@@ -8897,16 +9025,16 @@
       <pre class="lines">
 
 
+637
 638
 639
 640
 641
 642
-643
-644</pre>
+643</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 638</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 637</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scroll_into_view'>scroll_into_view</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_align_to'>align_to</span> <span class='op'>=</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span>
@@ -8966,12 +9094,12 @@
       <pre class="lines">
 
 
+648
 649
-650
-651</pre>
+650</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 649</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 648</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='id identifier rubyid_option_locator'>option_locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_option_locator'>option_locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_click'>click</span>
@@ -9040,12 +9168,12 @@
       <pre class="lines">
 
 
+656
 657
-658
-659</pre>
+658</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 657</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 656</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_selected?'>selected?</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_selected?'>selected?</span>
@@ -9117,12 +9245,12 @@
       <pre class="lines">
 
 
+664
 665
-666
-667</pre>
+666</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 665</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 664</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_send_keys'>send_keys</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_send_keys'>send_keys</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -9210,17 +9338,17 @@
       <pre class="lines">
 
 
+673
 674
 675
 676
 677
 678
 679
-680
-681</pre>
+680</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 674</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 673</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_attribute'>attribute</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -9281,14 +9409,14 @@
       <pre class="lines">
 
 
+685
 686
 687
 688
-689
-690</pre>
+689</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 686</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 685</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_show'>show</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -9359,12 +9487,12 @@
       <pre class="lines">
 
 
+695
 696
-697
-698</pre>
+697</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 696</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 695</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_size'>size</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
@@ -9420,12 +9548,12 @@
       <pre class="lines">
 
 
+702
 703
-704
-705</pre>
+704</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 703</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 702</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_submit'>submit</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_submit'>submit</span>
@@ -9461,12 +9589,12 @@
       <pre class="lines">
 
 
+293
 294
-295
-296</pre>
+295</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 294</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 293</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_to_alert'>switch_to_alert</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_alert'>alert</span>
@@ -9502,12 +9630,12 @@
       <pre class="lines">
 
 
+299
 300
-301
-302</pre>
+301</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 300</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 299</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_to_default_content'>switch_to_default_content</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_default_content'>default_content</span>
@@ -9543,12 +9671,12 @@
       <pre class="lines">
 
 
+304
 305
-306
-307</pre>
+306</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 305</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 304</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_to_frame'>switch_to_frame</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_frame'>frame</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
@@ -9584,12 +9712,12 @@
       <pre class="lines">
 
 
+309
 310
-311
-312</pre>
+311</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 310</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 309</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_to_parent_frame'>switch_to_parent_frame</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_parent_frame'>parent_frame</span>
@@ -9645,12 +9773,12 @@
       <pre class="lines">
 
 
+315
 316
-317
-318</pre>
+317</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 316</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 315</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_switch_to_window'>switch_to_window</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_switch_to'>switch_to</span><span class='period'>.</span><span class='id identifier rubyid_window'>window</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
@@ -9724,12 +9852,12 @@
       <pre class="lines">
 
 
+710
 711
-712
-713</pre>
+712</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 711</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 710</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tag_name'>tag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_tag_name'>tag_name</span>
@@ -9803,12 +9931,12 @@
       <pre class="lines">
 
 
+718
 719
-720
-721</pre>
+720</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 719</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 718</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_text'>text</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span>
@@ -9862,12 +9990,12 @@
       <pre class="lines">
 
 
+321
 322
-323
-324</pre>
+323</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 322</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 321</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_title'>title</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_title'>title</span>
@@ -9939,17 +10067,17 @@
       <pre class="lines">
 
 
+726
 727
 728
 729
 730
 731
 732
-733
-734</pre>
+733</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 727</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 726</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_trigger'>trigger</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
@@ -10030,12 +10158,12 @@
       <pre class="lines">
 
 
+328
 329
-330
-331</pre>
+330</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 329</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 328</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for'>wait_for</span><span class='lparen'>(</span><span class='id identifier rubyid_seconds'>seconds</span> <span class='op'>=</span> <span class='id identifier rubyid_timeout'>timeout</span><span class='rparen'>)</span>
   <span class='const'>Selenium</span><span class='op'>::</span><span class='const'>WebDriver</span><span class='op'>::</span><span class='const'>Wait</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>timeout:</span> <span class='id identifier rubyid_seconds'>seconds</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_until'>until</span> <span class='lbrace'>{</span> <span class='kw'>yield</span> <span class='rbrace'>}</span>
@@ -10091,12 +10219,12 @@
       <pre class="lines">
 
 
+335
 336
-337
-338</pre>
+337</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 336</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 335</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_enabled'>wait_for_enabled</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span> <span class='rbrace'>}</span>
@@ -10152,12 +10280,12 @@
       <pre class="lines">
 
 
+341
 342
-343
-344</pre>
+343</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 342</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 341</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_title'>wait_for_title</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_title'>title</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
@@ -10213,12 +10341,12 @@
       <pre class="lines">
 
 
+347
 348
-349
-350</pre>
+349</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 348</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 347</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_url'>wait_for_url</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_current_url'>current_url</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
@@ -10274,12 +10402,12 @@
       <pre class="lines">
 
 
+354
 355
-356
-357</pre>
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 355</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 354</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_visible'>wait_for_visible</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_displayed?'>displayed?</span> <span class='rbrace'>}</span>
@@ -10333,12 +10461,12 @@
       <pre class="lines">
 
 
+360
 361
-362
-363</pre>
+362</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 361</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 360</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_window_handle'>window_handle</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_window_handle'>window_handle</span>
@@ -10392,12 +10520,12 @@
       <pre class="lines">
 
 
+366
 367
-368
-369</pre>
+368</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 367</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 366</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_window_handles'>window_handles</span>
   <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_window_handles'>window_handles</span>
@@ -10453,12 +10581,12 @@
       <pre class="lines">
 
 
+372
 373
-374
-375</pre>
+374</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 373</span>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 372</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_zoom'>zoom</span><span class='lparen'>(</span><span class='id identifier rubyid_scale'>scale</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>document.body.style.zoom = arguments[0];</span><span class='tstring_end'>)</span></span><span class='comma'>,</span> <span class='id identifier rubyid_scale'>scale</span><span class='rparen'>)</span>
@@ -10473,7 +10601,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Jun  4 11:48:56 2020 by
+  Generated on Thu Jun  4 17:42:49 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.6).
 </div>
