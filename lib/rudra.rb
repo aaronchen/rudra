@@ -13,6 +13,9 @@ require 'webdrivers/iedriver'
 #   of the chosen browser
 # @attr_reader [String] install_dir The install directory of WebDrivers
 # @attr_reader [String] locale The browser locale
+# @attr_reader [Boolean] headless Headless mode for Google Chrome
+# @attr_reader [String] screen_dir The screenshot directory of save_screenshot
+# @attr_reader [String] log_prefix Prefix for loggins executed methods
 # @attr_reader [Integer] timeout The driver timeout
 # @attr_reader [Boolean] verbose Verbose mode
 class Rudra
@@ -28,7 +31,8 @@ class Rudra
   # Attributes
   ATTRIBUTES = %i[
     browser driver install_dir locale
-    headless log_prefix timeout verbose
+    headless screen_dir log_prefix
+    timeout verbose
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
@@ -43,8 +47,8 @@ class Rudra
   #   directory of WebDrivers
   # @option options [Symbol] :locale (:en) the browser locale
   # @option options [Boolean] :headless (false) headless mode
-  # @option options [String] :screen_dir ('.//') the location of screenshots
-  # @option options [String] :log_prefix (' - ') log prefix
+  # @option options [String] :screen_dir ('./screens/') the location of screenshots
+  # @option options [String] :log_prefix (' - ') prefix for logging executed methods
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (true) verbose mode
   def initialize(options = {})
