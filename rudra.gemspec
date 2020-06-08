@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rudra'
-  spec.version       = '1.0.17'
-  spec.date          = '2020-06-04'
+  spec.version       = '1.1.0'
+  spec.date          = '2020-06-08'
   spec.author        = 'Aaron Chen'
   spec.email         = 'aaron@611b.com'
 

@@ -11,9 +11,10 @@ require 'webdrivers'
 # @attr_reader [Boolean] headless Headless mode for Google Chrome
 # @attr_reader [String] window_size Chrome window size when headless
 # @attr_reader [String] screen_dir The screenshot directory of save_screenshot
-# @attr_reader [String] log_prefix Prefix for logging executed methods
+# @attr_reader [String] log_prefix Prefix for logging descriptions and methods
 # @attr_reader [Integer] timeout The driver timeout
-# @attr_reader [Boolean] verbose Verbose mode
+# @attr_reader [Boolean] verbose Turn on/off Verbose mode
+# @attr_reader [Boolean] silent Turn off Turn on/off descriptions
 class Rudra
   # Supported Browsers
   BROWSERS = %i[chrome firefox ie safari].freeze
@@ -28,12 +29,12 @@ class Rudra
   ATTRIBUTES = %i[
     browser driver install_dir locale
     headless window_size screen_dir
-    log_prefix timeout verbose
+    log_prefix timeout verbose silent
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
               :headless, :window_size, :screen_dir,
-              :log_prefix, :timeout, :verbose
+              :log_prefix, :timeout, :verbose, :silent
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -45,9 +46,10 @@ class Rudra
   # @option options [Boolean] :headless (false) headless mode
   # @option options [String] :window_size ('1280,720') window size when headless
   # @option options [String] :screen_dir ('./screens/') the location of screenshots
-  # @option options [String] :log_prefix (' - ') prefix for logging executed methods
+  # @option options [String] :log_prefix (' - ') prefix for logging descriptions and methods
   # @option options [Integer] :timeout (30) implicit_wait timeout
-  # @option options [Boolean] :verbose (true) verbose mode
+  # @option options [Boolean] :verbose (false) Turn on/off verbose mode
+  # @option options [Boolean] :silent (false) Turn on/off descriptions
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
@@ -56,7 +58,8 @@ class Rudra
     self.window_size = options.fetch(:window_size, '1280,720')
     self.screen_dir = options.fetch(:screen_dir, './screens/')
     self.log_prefix = options.fetch(:log_prefix, ' - ')
-    self.verbose = options.fetch(:verbose, true)
+    self.verbose = options.fetch(:verbose, false)
+    self.silent = options.fetch(:silent, false)
     self.main_label = caller_locations(2, 1).first.label
 
     initialize_driver
@@ -263,6 +266,12 @@ class Rudra
   # @return (String) the source of the current page
   def page_source
     driver.page_source
+  end
+
+  # Print description in the console
+  # @param [String] description description to show
+  def puts(description)
+    $stdout.puts "#{log_prefix}#{description.chomp}" unless silent
   end
 
   # Refresh the current pagef
@@ -1069,7 +1078,7 @@ class Rudra
   end
 
   (instance_methods - superclass.instance_methods).map do |method_name|
-    next if private_method_defined?(method_name) || ATTRIBUTES.include?(method_name)
+    next if private_method_defined?(method_name) || ATTRIBUTES.include?(method_name) || method_name == :puts
 
     original_method = instance_method(method_name)
 
@@ -1082,7 +1091,7 @@ class Rudra
   private
 
   attr_accessor :main_label
-  attr_writer :window_size
+  attr_writer :silent, :window_size
 
   def browser=(brw)
     unless BROWSERS.include?(brw)

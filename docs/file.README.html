@@ -72,7 +72,7 @@
 
 <p>rudra = Rudra.new(browser: :chrome, locale: :zh_tw)</p>
 
-<p>rudra.mkdir(‘./screenshots’) rudra.open(‘https://www.google.com’) rudra.send_keys(‘name=q’, ‘webdriver’, :enter) rudra.wait_for_title(‘webdriver’) rudra.click(‘#foot a.fl:eq(1)’) rudra.scroll_into_view(‘#fbar’) rudra.draw_redmark(‘#fsl’) rudra.save_screenshot(‘./screenshots/sample.png’) rudra.clear_drawings rudra.quit</p>
+<p>rudra.puts(‘Go to Google Search’) rudra.open(‘https://www.google.com’) rudra.puts(‘Search: webdriver’) rudra.send_keys(‘name=q’, ‘webdriver’, :enter) rudra.puts(‘Watil until page title is: webdriver’) rudra.wait_for_title(‘webdriver’) rudra.puts(‘Scroll to footer’) rudra.scroll_into_view(‘#fbar’) rudra.puts(‘Draw a redmark’) rudra.draw_redmark(‘#fsl’) rudra.puts(‘Save a screenshot’) rudra.save_screenshot(‘sample_screen’) rudra.puts(‘Clear the drawing’) rudra.clear_drawings rudra.puts(‘Quit the driver’) rudra.quit</p>
 
 <p>“</p>
 
@@ -112,7 +112,7 @@
 </div></div>
 
       <div id="footer">
-  Generated on Thu Jun  4 17:42:48 2020 by
+  Generated on Mon Jun  8 14:08:52 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.6).
 </div>
