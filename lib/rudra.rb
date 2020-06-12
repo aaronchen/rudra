@@ -292,13 +292,16 @@ class Rudra
   # Save a PNG screenshot to file
   # @param [String] filename the filename of PNG screenshot
   def save_screenshot(filename)
-    mkdir(@screen_dir) unless Dir.exist?(@screen_dir)
-    driver.save_screenshot(
-      File.join(
-        @screen_dir,
-        filename.end_with?('.png') ? filename : "#{filename}.png"
-      )
+    file = File.join(
+      @screen_dir,
+      sanitize(filename.end_with?('.png') ? filename : "#{filename}.png")
     )
+
+    dir = File.dirname(file)
+
+    mkdir(dir) unless Dir.exist?(dir)
+
+    driver.save_screenshot(file)
   end
 
   # Switch to the currently active modal dialog
@@ -370,24 +373,22 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   # @param [Integer] seconds seconds before timed out
-  def wait_for_not_visible(locator, seconds = 2)
+  def wait_for_not_visible(locator, seconds = 3)
     how, what = parse_locator(locator)
+
+    implicit_wait(seconds)
 
     begin
       wait_for(seconds) do
-        begin
-          elements = driver.find_elements(how, what)
-          elements.empty? || elements.map(&:displayed?).none?
-        rescue Selenium::WebDriver::Error::NoSuchElementError
-          true
-        rescue Selenium::WebDriver::Error::StaleElementReferenceError
-          false
-        end
+        elements = driver.find_elements(how, what)
+        elements.empty? || elements.map(&:displayed?).none?
       end
     rescue Selenium::WebDriver::Error::TimeoutError
       true
     rescue Net::ReadTimeout
       true
+    ensure
+      implicit_wait(timeout)
     end
   end
 
@@ -1303,6 +1304,14 @@ class Rudra
     puts log_prefix + (
       arguments.empty? ? method_name.to_s : "#{method_name}(#{arguments})"
     )
+  end
+
+  def sanitize(filename)
+    invalid_characters = ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>']
+    invalid_characters.each do |character|
+      filename.gsub!(character, '')
+    end
+    filename
   end
 
   def random_id(length = 8)
