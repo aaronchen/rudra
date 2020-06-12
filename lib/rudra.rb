@@ -177,7 +177,7 @@ class Rudra
 
     element ||= driver.find_element(how, what)
 
-    abort("Failed to find element: #{locator}") unless element
+    raise Selenium::WebDriver::Error::NoSuchElementError, "Failed to find element: #{locator}" unless element
 
     wait_for { element.displayed? }
 
@@ -189,8 +189,11 @@ class Rudra
   # @return [Array<Selenium::WebDriver::Element>] the elements found
   def find_elements(locator)
     how, what = parse_locator(locator)
-    driver.find_elements(how, what) ||
-      abort("Failed to find elements: #{locator}")
+    elements = driver.find_elements(how, what)
+
+    raise Selenium::WebDriver::Error::NoSuchElementError, "Failed to find elements: #{locator}" if elements.empty?
+
+    elements
   end
 
   # Move forward a single entry in the browser's history
@@ -310,6 +313,7 @@ class Rudra
   end
 
   # Switch to the frame with the given id
+  # @param [String] id the frame id
   def switch_to_frame(id)
     driver.switch_to.frame(id)
   end
@@ -343,6 +347,48 @@ class Rudra
   #   identify the element or Selenium::WebDriver::Element
   def wait_for_enabled(locator)
     wait_for { find_element(locator).enabled? }
+  end
+
+  # Wait until the element, identified by locator, is found in frame
+  # @param [String] frame_id the frame id
+  # @param [String] locator the locator to identify the element
+  def wait_for_element_found_in_frame(frame_id, locator)
+    switch_to_frame frame_id
+
+    how, what = parse_locator(locator)
+
+    wait_for do
+      begin
+        driver.find_element(how, what)
+      rescue Selenium::WebDriver::Error::NoSuchWindowError
+        false
+      end
+    end
+  end
+
+  # Wait (in seconds) until the element is not displayed
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Integer] seconds seconds before timed out
+  def wait_for_not_visible(locator, seconds = 2)
+    how, what = parse_locator(locator)
+
+    begin
+      wait_for(seconds) do
+        begin
+          elements = driver.find_elements(how, what)
+          elements.empty? || elements.map(&:displayed?).none?
+        rescue Selenium::WebDriver::Error::NoSuchElementError
+          true
+        rescue Selenium::WebDriver::Error::StaleElementReferenceError
+          false
+        end
+      end
+    rescue Selenium::WebDriver::Error::TimeoutError
+      true
+    rescue Net::ReadTimeout
+      true
+    end
   end
 
   # Wait until the title of the page including the given string
@@ -393,7 +439,7 @@ class Rudra
   # @param [String] attribute the name of the attribute
   # @return [String, nil] attribute value
   def attribute(locator, attribute)
-    find_element(locator).property(attribute)
+    find_element(locator).attribute(attribute)
   end
 
   # If the element, identified by locator, has the given attribute
@@ -428,7 +474,13 @@ class Rudra
   # @param [String, Selenium::WebDriver::Element] locator the locator to
   #   identify the element or Selenium::WebDriver::Element
   def click(locator)
-    find_element(locator).click
+    wait_for do
+      begin
+        find_element(locator).click.nil?
+      rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+        false
+      end
+    end
   end
 
   # Click the given element, identified by locator, with an offset
@@ -739,6 +791,38 @@ class Rudra
       var event = new Event(eventName, {"bubbles": false, "cancelable": false});
       element.dispatchEvent(event);
     ), find_element(locator), event)
+  end
+
+  # Wait until the element, identified by locator, attribute has value
+  # @param [String, Selenium::WebDriver::Element] locator the locator to identify the element
+  # @param [String] attribute the name of the attribute
+  # @param [String] value the value of the attribute
+  def wait_for_attribute_to_include(locator, attribute, value)
+    how, what = parse_locator(locator)
+
+    wait_for do
+      begin
+        driver.find_element(how, what)&.attribute(attribute)&.downcase&.include?(value.downcase)
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError
+        false
+      end
+    end
+  end
+
+  # Wait until the element, identified by locator, excluding string in text
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [String] string the string to exclude
+  def wait_for_text_to_exclude(locator, string)
+    wait_for { text(locator).exclude?(string) }
+  end
+
+  # Wait until the element, identified by locator, including string in text
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [String] string the string to compare
+  def wait_for_text_to_include(locator, string)
+    wait_for { text(locator).include?(string) }
   end
 
   #
@@ -1206,7 +1290,7 @@ class Rudra
             how.to_sym
           end
 
-    abort("Cannot parse locator: #{locator}") unless HOWS.include?(how)
+    raise Selenium::WebDriver::Error::InvalidSelectorError, "Cannot parse locator: #{locator}" unless HOWS.include?(how)
 
     [how, what]
   end
