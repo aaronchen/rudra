@@ -1,5 +1,9 @@
 require 'selenium-webdriver'
 require 'webdrivers'
+require 'zip'
+require 'base64'
+require 'json'
+require 'stringio'
 
 # Selenium IDE-like WebDriver based upon Ruby binding
 # @author Aaron Chen
@@ -15,6 +19,8 @@ require 'webdrivers'
 # @attr_reader [Integer] timeout The driver timeout
 # @attr_reader [Boolean] verbose Turn on/off Verbose mode
 # @attr_reader [Boolean] silent Turn off Turn on/off descriptions
+# @attr_reader [String] chrome_auth_username Chrome Basic Auth Extension - username
+# @attr_reader [String] chrome_auth_password Chrome Basic Auth Extension - password
 class Rudra
   # Supported Browsers
   BROWSERS = %i[chrome firefox ie safari].freeze
@@ -30,11 +36,13 @@ class Rudra
     browser driver install_dir locale
     headless window_size screen_dir
     log_prefix timeout verbose silent
+    chrome_auth_username chrome_auth_password
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
               :headless, :window_size, :screen_dir,
-              :log_prefix, :timeout, :verbose, :silent
+              :log_prefix, :timeout, :verbose, :silent,
+              :chrome_auth_username, :chrome_auth_password
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -50,6 +58,8 @@ class Rudra
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (false) Turn on/off verbose mode
   # @option options [Boolean] :silent (false) Turn on/off descriptions
+  # @option options [String] :chrome_auth_username ('') username for Chrome Basic Auth extension
+  # @option options [String] :chrome_auth_password ('') password for Chrome Basic Auth extension
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
@@ -60,6 +70,8 @@ class Rudra
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, false)
     self.silent = options.fetch(:silent, false)
+    self.chrome_auth_username = options.fetch(:chrome_auth_username, '')
+    self.chrome_auth_password = options.fetch(:chrome_auth_password, '')
     self.main_label = caller_locations(2, 1).first.label
 
     initialize_driver
@@ -147,6 +159,26 @@ class Rudra
   # @param [String] name the name of the cookie
   def delete_cookie(name)
     driver.manage.delete_cookie(name)
+  end
+
+  # Check if an element is found
+  # @param [String, Selenium::WebDriver::Element] locator the locator to
+  #   identify the element or Selenium::WebDriver::Element
+  # @param [Integer] seconds seconds before timed out
+  def element_found?(locator, seconds = 1)
+    how, what = parse_locator(locator)
+
+    implicit_wait(seconds)
+
+    begin
+      wait_for(seconds) { driver.find_element(how, what).displayed? }
+    rescue Selenium::WebDriver::Error::TimeoutError
+      false
+    rescue Net::ReadTimeout
+      false
+    ensure
+      implicit_wait(timeout)
+    end
   end
 
   # Execute the given JavaScript
@@ -380,8 +412,12 @@ class Rudra
 
     begin
       wait_for(seconds) do
-        elements = driver.find_elements(how, what)
-        elements.empty? || elements.map(&:displayed?).none?
+        begin
+          elements = driver.find_elements(how, what)
+          elements.empty? || elements.map(&:displayed?).none?
+        rescue Selenium::WebDriver::Error::StaleElementReferenceError
+          false
+        end
       end
     rescue Selenium::WebDriver::Error::TimeoutError
       true
@@ -477,7 +513,8 @@ class Rudra
   def click(locator)
     wait_for do
       begin
-        find_element(locator).click.nil?
+        element = find_element(locator)
+        element.enabled? && element.click.nil?
       rescue Selenium::WebDriver::Error::ElementClickInterceptedError
         false
       end
@@ -1176,7 +1213,7 @@ class Rudra
   private
 
   attr_accessor :main_label
-  attr_writer :silent, :window_size
+  attr_writer :silent, :window_size, :chrome_auth_username, :chrome_auth_password
 
   def browser=(brw)
     unless BROWSERS.include?(brw)
@@ -1246,6 +1283,10 @@ class Rudra
     if headless
       options.add_argument('--headless')
       options.add_argument("--window-size=#{window_size}")
+    end
+    if chrome_auth_username && chrome_auth_password
+      encoded = chrome_basic_auth_extension(chrome_auth_username, chrome_auth_password)
+      options.add_encoded_extension(encoded)
     end
     options.add_option(
       'excludeSwitches',
@@ -1318,5 +1359,49 @@ class Rudra
     charset = [(0..9), ('a'..'z')].flat_map(&:to_a)
     id = Array.new(length) { charset.sample }.join
     "rudra_#{id}"
+  end
+
+  def chrome_basic_auth_extension(username, password)
+    manifest = {
+      "manifest_version": 2,
+      "name": 'Rudra Basic Auth Extension',
+      "version": '1.0.0',
+      "permissions": ['*://*/*', 'webRequest', 'webRequestBlocking'],
+      "background": {
+        "scripts": ['background.js']
+      }
+    }
+
+    background = <<~JSCRIPT
+      var username = '#{username}';
+      var password = '#{password}';
+
+      chrome.webRequest.onAuthRequired.addListener(
+        function handler(details) {
+          if (username == null) {
+            return { cancel: true };
+          }
+
+          var authCredentials = { username: username, password: username };
+          username = password = null;
+
+          return { authCredentials: authCredentials };
+        },
+        { urls: ['<all_urls>'] },
+        ['blocking']
+      );
+    JSCRIPT
+
+    stringio = Zip::OutputStream.write_buffer do |zos|
+      zos.put_next_entry('manifest.json')
+      zos.write manifest.to_json
+      zos.put_next_entry('background.js')
+      zos.write background
+    end
+    # File.open('basic_auth.crx', 'wb') do |f|
+    #   f << stringio.string
+    # end
+
+    Base64.strict_encode64(stringio.string)
   end
 end
