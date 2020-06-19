@@ -19,8 +19,8 @@ require 'stringio'
 # @attr_reader [Integer] timeout The driver timeout
 # @attr_reader [Boolean] verbose Turn on/off Verbose mode
 # @attr_reader [Boolean] silent Turn off Turn on/off descriptions
-# @attr_reader [String] chrome_auth_username Chrome Basic Auth Extension - username
-# @attr_reader [String] chrome_auth_password Chrome Basic Auth Extension - password
+# @attr_reader [String] auth_username username for Basic Access Authentication Extension (Chrome only)
+# @attr_reader [String] auth_password password for Basic Access Authentication Extension (Chrome only)
 class Rudra
   # Supported Browsers
   BROWSERS = %i[chrome firefox ie safari].freeze
@@ -36,13 +36,13 @@ class Rudra
     browser driver install_dir locale
     headless window_size screen_dir
     log_prefix timeout verbose silent
-    chrome_auth_username chrome_auth_password
+    auth_username auth_password
   ].freeze
 
   attr_reader :browser, :driver, :install_dir, :locale,
               :headless, :window_size, :screen_dir,
               :log_prefix, :timeout, :verbose, :silent,
-              :chrome_auth_username, :chrome_auth_password
+              :auth_username, :auth_password
 
   # Initialize an instance of Rudra
   # @param [Hash] options the options to initialize Rudra
@@ -58,8 +58,8 @@ class Rudra
   # @option options [Integer] :timeout (30) implicit_wait timeout
   # @option options [Boolean] :verbose (false) Turn on/off verbose mode
   # @option options [Boolean] :silent (false) Turn on/off descriptions
-  # @option options [String] :chrome_auth_username ('') username for Chrome Basic Auth extension
-  # @option options [String] :chrome_auth_password ('') password for Chrome Basic Auth extension
+  # @option options [String] :auth_username ('') username for Basic Access Authentication extension
+  # @option options [String] :auth_password ('') password for Basic Access Authentication extension
   def initialize(options = {})
     self.browser = options.fetch(:browser, :chrome)
     self.install_dir = options.fetch(:install_dir, './webdrivers/')
@@ -70,8 +70,8 @@ class Rudra
     self.log_prefix = options.fetch(:log_prefix, ' - ')
     self.verbose = options.fetch(:verbose, false)
     self.silent = options.fetch(:silent, false)
-    self.chrome_auth_username = options.fetch(:chrome_auth_username, '')
-    self.chrome_auth_password = options.fetch(:chrome_auth_password, '')
+    self.auth_username = options.fetch(:auth_username, '')
+    self.auth_password = options.fetch(:auth_password, '')
     self.main_label = caller_locations(2, 1).first.label
 
     initialize_driver
@@ -384,10 +384,10 @@ class Rudra
     wait_for { find_element(locator).enabled? }
   end
 
-  # Wait until the element, identified by locator, is found in frame
+  # Switch to a frame and wait until the element, identified by locator, is found
   # @param [String] frame_id the frame id
   # @param [String] locator the locator to identify the element
-  def wait_for_element_found_in_frame(frame_id, locator)
+  def switch_to_frame_and_wait_for_element_found(frame_id, locator)
     switch_to_frame frame_id
 
     how, what = parse_locator(locator)
@@ -1213,7 +1213,7 @@ class Rudra
   private
 
   attr_accessor :main_label
-  attr_writer :silent, :window_size, :chrome_auth_username, :chrome_auth_password
+  attr_writer :silent, :window_size, :auth_username, :auth_password
 
   def browser=(brw)
     unless BROWSERS.include?(brw)
@@ -1284,8 +1284,8 @@ class Rudra
       options.add_argument('--headless')
       options.add_argument("--window-size=#{window_size}")
     end
-    if chrome_auth_username && chrome_auth_password
-      encoded = chrome_basic_auth_extension(chrome_auth_username, chrome_auth_password)
+    if auth_username && auth_password
+      encoded = chrome_basic_auth_extension(auth_username, auth_password)
       options.add_encoded_extension(encoded)
     end
     options.add_option(
@@ -1364,7 +1364,7 @@ class Rudra
   def chrome_basic_auth_extension(username, password)
     manifest = {
       "manifest_version": 2,
-      "name": 'Rudra Basic Auth Extension',
+      "name": 'Rudra Basic Access Authentication Extension',
       "version": '1.0.0',
       "permissions": ['*://*/*', 'webRequest', 'webRequestBlocking'],
       "background": {
@@ -1372,7 +1372,7 @@ class Rudra
       }
     }
 
-    background = <<~JSCRIPT
+    background = <<~JAVASCRIPT
       var username = '#{username}';
       var password = '#{password}';
 
@@ -1390,7 +1390,7 @@ class Rudra
         { urls: ['<all_urls>'] },
         ['blocking']
       );
-    JSCRIPT
+    JAVASCRIPT
 
     stringio = Zip::OutputStream.write_buffer do |zos|
       zos.put_next_entry('manifest.json')

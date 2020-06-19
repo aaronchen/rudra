@@ -70,9 +70,17 @@
 
 <p>“by require ‘rudra’</p>
 
-<p>rudra = Rudra.new(browser: :chrome, locale: :zh_tw)</p>
+<h1 id="initailize_using_chrome_and_zhtw_locale">Initailize using Chrome and zh-TW locale</h1>
 
-<p>rudra.puts(‘Go to Google Search’) rudra.open(‘https://www.google.com’) rudra.puts(‘Search: webdriver’) rudra.send_keys(‘name=q’, ‘webdriver’, :enter) rudra.puts(‘Watil until page title is: webdriver’) rudra.wait_for_title(‘webdriver’) rudra.puts(‘Scroll to footer’) rudra.scroll_into_view(‘#fbar’) rudra.puts(‘Draw a redmark’) rudra.draw_redmark(‘#fsl’) rudra.puts(‘Save a screenshot’) rudra.save_screenshot(‘sample_screen’) rudra.puts(‘Clear the drawing’) rudra.clear_drawings rudra.puts(‘Quit the driver’) rudra.quit</p>
+<p>rudra = Rudra.new browser: :chrome, locale: :zh_tw</p>
+
+<h1 id="initialize_headless_with_1920x1080_window_size">Initialize headless with 1920x1080 window size</h1>
+
+<p>rudra = Rudra.new headless: true, window_size: ‘1920,1080’</p>
+
+<h1 id="sample_steps">Sample Steps</h1>
+
+<p>rudra.puts ‘Search: webdriver’ rudra.open ‘https://www.google.com’ rudra.puts ‘Go to Google Search’ rudra.send_keys ‘name=q’, ‘webdriver’, :enter rudra.puts ‘Watil until page title is: webdriver’ rudra.wait_for_title ‘webdriver’ rudra.puts ‘Scroll to footer’ rudra.scroll_into_view ‘#fbar’ rudra.puts ‘Draw a redmark’ rudra.draw_redmark ‘#fsl’ rudra.puts ‘Save a screenshot’ rudra.save_screenshot ‘sample_screen’ rudra.puts ‘Clear the drawing’ rudra.clear_drawings rudra.puts ‘Quit the driver’ rudra.quit</p>
 
 <p>“</p>
 
@@ -112,7 +120,7 @@
 </div></div>
 
       <div id="footer">
-  Generated on Thu Jun 18 18:05:59 2020 by
+  Generated on Fri Jun 19 14:58:11 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.6).
 </div>

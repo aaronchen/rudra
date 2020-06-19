@@ -188,7 +188,7 @@
   </span><span class='tstring_content'>browser</span><span class='words_sep'> </span><span class='tstring_content'>driver</span><span class='words_sep'> </span><span class='tstring_content'>install_dir</span><span class='words_sep'> </span><span class='tstring_content'>locale</span><span class='words_sep'>
   </span><span class='tstring_content'>headless</span><span class='words_sep'> </span><span class='tstring_content'>window_size</span><span class='words_sep'> </span><span class='tstring_content'>screen_dir</span><span class='words_sep'>
   </span><span class='tstring_content'>log_prefix</span><span class='words_sep'> </span><span class='tstring_content'>timeout</span><span class='words_sep'> </span><span class='tstring_content'>verbose</span><span class='words_sep'> </span><span class='tstring_content'>silent</span><span class='words_sep'>
-  </span><span class='tstring_content'>chrome_auth_username</span><span class='words_sep'> </span><span class='tstring_content'>chrome_auth_password</span><span class='words_sep'>
+  </span><span class='tstring_content'>auth_username</span><span class='words_sep'> </span><span class='tstring_content'>auth_password</span><span class='words_sep'>
 </span><span class='tstring_end'>]</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
     </dl>
@@ -199,6 +199,64 @@
 
   <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
   <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#auth_password-instance_method" title="#auth_password (instance method)">#<strong>auth_password</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>password for Basic Access Authentication Extension (Chrome only).</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#auth_username-instance_method" title="#auth_username (instance method)">#<strong>auth_username</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>username for Basic Access Authentication Extension (Chrome only).</p>
+</div></span>
+  
+</li>
+
     
       <li class="public ">
   <span class="summary_signature">
@@ -224,64 +282,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>The chosen browser.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#chrome_auth_password-instance_method" title="#chrome_auth_password (instance method)">#<strong>chrome_auth_password</strong>  &#x21d2; String </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Chrome Basic Auth Extension - password.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#chrome_auth_username-instance_method" title="#chrome_auth_username (instance method)">#<strong>chrome_auth_username</strong>  &#x21d2; String </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Chrome Basic Auth Extension - username.</p>
 </div></span>
   
 </li>
@@ -2443,6 +2443,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#switch_to_frame_and_wait_for_element_found-instance_method" title="#switch_to_frame_and_wait_for_element_found (instance method)">#<strong>switch_to_frame_and_wait_for_element_found</strong>(frame_id, locator)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Switch to a frame and wait until the element, identified by locator, is found.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#switch_to_parent_frame-instance_method" title="#switch_to_parent_frame (instance method)">#<strong>switch_to_parent_frame</strong>  &#x21d2; Object </a>
     
 
@@ -2627,30 +2651,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Wait until the element, identified by locator, attribute has value.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#wait_for_element_found_in_frame-instance_method" title="#wait_for_element_found_in_frame (instance method)">#<strong>wait_for_element_found_in_frame</strong>(frame_id, locator)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Wait until the element, identified by locator, is found in frame.</p>
 </div></span>
   
 </li>
@@ -3110,7 +3110,7 @@
         </li>
       
         <li>
-          <span class="name">:chrome_auth_username</span>
+          <span class="name">:auth_username</span>
           <span class="type">(<tt>String</tt>)</span>
           <span class="default">
             
@@ -3120,13 +3120,13 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>username for Chrome Basic Auth extension</p>
+<p>username for Basic Access Authentication extension</p>
 </div>
           
         </li>
       
         <li>
-          <span class="name">:chrome_auth_password</span>
+          <span class="name">:auth_password</span>
           <span class="type">(<tt>String</tt>)</span>
           <span class="default">
             
@@ -3136,7 +3136,7 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>password for Chrome Basic Auth extension</p>
+<p>password for Basic Access Authentication extension</p>
 </div>
           
         </li>
@@ -3183,8 +3183,8 @@
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log_prefix'>log_prefix</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:log_prefix</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> - </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_verbose'>verbose</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:verbose</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_silent'>silent</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:silent</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
-  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_chrome_auth_username'>chrome_auth_username</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:chrome_auth_username</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_chrome_auth_password'>chrome_auth_password</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:chrome_auth_password</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_auth_username'>auth_username</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:auth_username</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_auth_password'>auth_password</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='symbol'>:auth_password</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_label'>main_label</span> <span class='op'>=</span> <span class='id identifier rubyid_caller_locations'>caller_locations</span><span class='lparen'>(</span><span class='int'>2</span><span class='comma'>,</span> <span class='int'>1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='period'>.</span><span class='id identifier rubyid_label'>label</span>
 
   <span class='id identifier rubyid_initialize_driver'>initialize_driver</span>
@@ -3202,9 +3202,131 @@
     <h2>Instance Attribute Details</h2>
     
       
-      <span id="browser=-instance_method"></span>
+      <span id="auth_password=-instance_method"></span>
       <div class="method_details first">
-  <h3 class="signature first" id="browser-instance_method">
+  <h3 class="signature first" id="auth_password-instance_method">
+  
+    #<strong>auth_password</strong>  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>password for Basic Access Authentication Extension (Chrome only)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current value of auth_password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+24
+25
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 24</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_auth_password'>auth_password</span>
+  <span class='ivar'>@auth_password</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="auth_username=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="auth_username-instance_method">
+  
+    #<strong>auth_username</strong>  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>username for Basic Access Authentication Extension (Chrome only)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current value of auth_username</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+24
+25
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 24</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_auth_username'>auth_username</span>
+  <span class='ivar'>@auth_username</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="browser=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="browser-instance_method">
   
     #<strong>browser</strong>  &#x21d2; <tt>Symbol</tt> 
   
@@ -3256,128 +3378,6 @@
 
 <span class='kw'>def</span> <span class='id identifier rubyid_browser'>browser</span>
   <span class='ivar'>@browser</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id="chrome_auth_password=-instance_method"></span>
-      <div class="method_details ">
-  <h3 class="signature " id="chrome_auth_password-instance_method">
-  
-    #<strong>chrome_auth_password</strong>  &#x21d2; <tt>String</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Chrome Basic Auth Extension - password</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the current value of chrome_auth_password</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-24
-25
-26</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 24</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_chrome_auth_password'>chrome_auth_password</span>
-  <span class='ivar'>@chrome_auth_password</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id="chrome_auth_username=-instance_method"></span>
-      <div class="method_details ">
-  <h3 class="signature " id="chrome_auth_username-instance_method">
-  
-    #<strong>chrome_auth_username</strong>  &#x21d2; <tt>String</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Chrome Basic Auth Extension - username</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the current value of chrome_auth_username</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-24
-25
-26</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 24</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_chrome_auth_username'>chrome_auth_username</span>
-  <span class='ivar'>@chrome_auth_username</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -10429,6 +10429,103 @@
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="switch_to_frame_and_wait_for_element_found-instance_method">
+  
+    #<strong>switch_to_frame_and_wait_for_element_found</strong>(frame_id, locator)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Switch to a frame and wait until the element, identified by locator, is found</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>frame_id</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the frame id</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>locator</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the locator to identify the element</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 390</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_switch_to_frame_and_wait_for_element_found'>switch_to_frame_and_wait_for_element_found</span><span class='lparen'>(</span><span class='id identifier rubyid_frame_id'>frame_id</span><span class='comma'>,</span> <span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_switch_to_frame'>switch_to_frame</span> <span class='id identifier rubyid_frame_id'>frame_id</span>
+
+  <span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_locator'>parse_locator</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='kw'>do</span>
+    <span class='kw'>begin</span>
+      <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span><span class='rparen'>)</span>
+    <span class='kw'>rescue</span> <span class='const'>Selenium</span><span class='op'>::</span><span class='const'>WebDriver</span><span class='op'>::</span><span class='const'>Error</span><span class='op'>::</span><span class='const'>NoSuchWindowError</span>
+      <span class='kw'>false</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="switch_to_parent_frame-instance_method">
   
     #<strong>switch_to_parent_frame</strong>  &#x21d2; <tt>Object</tt> 
@@ -11015,103 +11112,6 @@
     <span class='kw'>begin</span>
       <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span><span class='rparen'>)</span><span class='op'>&amp;.</span><span class='id identifier rubyid_attribute'>attribute</span><span class='lparen'>(</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span><span class='op'>&amp;.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='op'>&amp;.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='rparen'>)</span>
     <span class='kw'>rescue</span> <span class='const'>Selenium</span><span class='op'>::</span><span class='const'>WebDriver</span><span class='op'>::</span><span class='const'>Error</span><span class='op'>::</span><span class='const'>StaleElementReferenceError</span>
-      <span class='kw'>false</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="wait_for_element_found_in_frame-instance_method">
-  
-    #<strong>wait_for_element_found_in_frame</strong>(frame_id, locator)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Wait until the element, identified by locator, is found in frame</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>frame_id</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the frame id</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>locator</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the locator to identify the element</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '.\lib\rudra.rb', line 390</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_wait_for_element_found_in_frame'>wait_for_element_found_in_frame</span><span class='lparen'>(</span><span class='id identifier rubyid_frame_id'>frame_id</span><span class='comma'>,</span> <span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_switch_to_frame'>switch_to_frame</span> <span class='id identifier rubyid_frame_id'>frame_id</span>
-
-  <span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_locator'>parse_locator</span><span class='lparen'>(</span><span class='id identifier rubyid_locator'>locator</span><span class='rparen'>)</span>
-
-  <span class='id identifier rubyid_wait_for'>wait_for</span> <span class='kw'>do</span>
-    <span class='kw'>begin</span>
-      <span class='id identifier rubyid_driver'>driver</span><span class='period'>.</span><span class='id identifier rubyid_find_element'>find_element</span><span class='lparen'>(</span><span class='id identifier rubyid_how'>how</span><span class='comma'>,</span> <span class='id identifier rubyid_what'>what</span><span class='rparen'>)</span>
-    <span class='kw'>rescue</span> <span class='const'>Selenium</span><span class='op'>::</span><span class='const'>WebDriver</span><span class='op'>::</span><span class='const'>Error</span><span class='op'>::</span><span class='const'>NoSuchWindowError</span>
       <span class='kw'>false</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
@@ -11820,7 +11820,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Jun 18 18:06:00 2020 by
+  Generated on Fri Jun 19 14:58:13 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.6).
 </div>
