@@ -1284,9 +1284,13 @@ class Rudra
       options.add_argument('--headless')
       options.add_argument("--window-size=#{window_size}")
     end
-    if auth_username && auth_password
-      encoded = chrome_basic_auth_extension(auth_username, auth_password)
-      options.add_encoded_extension(encoded)
+    if auth_username
+      if headless
+        $stdout.puts('Basic Access Authentication Extension cannot be installed while headless')
+      else
+        encoded = chrome_basic_auth_extension(auth_username, auth_password)
+        options.add_encoded_extension(encoded)
+      end
     end
     options.add_option(
       'excludeSwitches',

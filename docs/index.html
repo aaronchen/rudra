@@ -80,7 +80,19 @@
 
 <h1 id="sample_steps">Sample Steps</h1>
 
-<p>rudra.puts ‘Search: webdriver’ rudra.open ‘https://www.google.com’ rudra.puts ‘Go to Google Search’ rudra.send_keys ‘name=q’, ‘webdriver’, :enter rudra.puts ‘Watil until page title is: webdriver’ rudra.wait_for_title ‘webdriver’ rudra.puts ‘Scroll to footer’ rudra.scroll_into_view ‘#fbar’ rudra.puts ‘Draw a redmark’ rudra.draw_redmark ‘#fsl’ rudra.puts ‘Save a screenshot’ rudra.save_screenshot ‘sample_screen’ rudra.puts ‘Clear the drawing’ rudra.clear_drawings rudra.puts ‘Quit the driver’ rudra.quit</p>
+<p>rudra.puts ‘Search: webdriver’ rudra.open ‘https://www.google.com’ rudra.puts ‘Go to Google Search’ rudra.send_keys ‘name=q’, ‘webdriver’, :enter rudra.puts ‘Wait until page title contains: webdriver’ rudra.wait_for_title ‘webdriver’ rudra.puts ‘Scroll to footer’ rudra.scroll_into_view ‘#fbar’ rudra.puts ‘Draw a redmark’ rudra.draw_redmark ‘#fsl’ rudra.puts ‘Save a screenshot’ rudra.save_screenshot ‘sample_screen’ rudra.puts ‘Clear the drawing’ rudra.clear_drawings rudra.puts ‘Quit the driver’ rudra.quit</p>
+
+<p>#</p>
+
+<h1 id="rudra_supports_basicdigest_authentication_using_a_builtin_chrome_extension">Rudra supports Basic/Digest Authentication using a built-in Chrome extension</h1>
+
+<p># require ‘rudra’</p>
+
+<p>rudra = Rudra.new auth_username: ‘guest’, auth_password: ‘guest’ rudra.puts ‘Basic/Digest Authentication Test’ rudra.open ‘https://jigsaw.w3.org/HTTP/Basic/’ # Basic Authentication test</p>
+
+<h1 id="rudraopen_httpsjigsaww3orghttpdigest__digest_authentication_test">rudra.open ‘https://jigsaw.w3.org/HTTP/Digest/’ # Digest Authentication test</h1>
+
+<p>rudra.save_screenshot ‘Authentication Pass’ rudra.quit</p>
 
 <p>“</p>
 
@@ -120,7 +132,7 @@
 </div></div>
 
       <div id="footer">
-  Generated on Fri Jun 19 14:58:11 2020 by
+  Generated on Tue Jun 30 12:16:34 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.6.6).
 </div>
