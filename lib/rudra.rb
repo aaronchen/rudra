@@ -1280,10 +1280,14 @@ class Rudra
   def chrome_options
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--disable-notifications')
+    options.add_argument('--ignore-ssl-errors=yes')
+    options.add_argument('--ignore-certificate-errors')
+
     if headless
       options.add_argument('--headless')
       options.add_argument("--window-size=#{window_size}")
     end
+
     if auth_username
       if headless
         $stdout.puts('Basic Access Authentication Extension cannot be installed while headless')
@@ -1292,6 +1296,7 @@ class Rudra
         options.add_encoded_extension(encoded)
       end
     end
+
     options.add_option(
       'excludeSwitches',
       %w[enable-automation enable-logging]
